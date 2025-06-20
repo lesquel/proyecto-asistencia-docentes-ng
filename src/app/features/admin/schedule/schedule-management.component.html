@@ -1,0 +1,87 @@
+<app-layout [title]="'Gestión de Horarios'" [menuItems]="menuItems">
+    <div class="schedule-management-container px-4 py-6 max-w-7xl mx-auto">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Horarios de Clases</h2>
+                <p class="text-sm text-gray-500">
+                    Gestionar horarios de todos los docentes
+                </p>
+            </div>
+
+            <!-- Botón Agregar -->
+            <div class="flex justify-end mb-4">
+                <button
+                    class="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded hover:bg-blue-700 transition"
+                    (click)="openScheduleDialog()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Agregar Horario
+                </button>
+            </div>
+
+            <!-- Tabla -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left text-gray-700 border border-gray-200">
+                    <thead class="bg-gray-100 text-gray-600 uppercase">
+                        <tr>
+                            <th class="px-4 py-3 border">Docente</th>
+                            <th class="px-4 py-3 border">Día</th>
+                            <th class="px-4 py-3 border">Horario</th>
+                            <th class="px-4 py-3 border">Materia</th>
+                            <th class="px-4 py-3 border">Aula</th>
+                            <th class="px-4 py-3 border text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let schedule of allSchedules()" class="border-t hover:bg-gray-50">
+                            <!-- Docente -->
+                            <td class="px-4 py-3">
+                                <div class="font-semibold">{{ schedule.teacherName }}</div>
+                                <div class="text-xs text-gray-500">{{ schedule.teacherEmployeeId }}</div>
+                            </td>
+
+                            <!-- Día -->
+                            <td class="px-4 py-3">
+                                <span
+                                    class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded">
+                                    {{ getDayName(schedule.dayOfWeek) }}
+                                </span>
+                            </td>
+
+                            <!-- Horario -->
+                            <td class="px-4 py-3">{{ schedule.startTime }} - {{ schedule.endTime }}</td>
+
+                            <!-- Materia -->
+                            <td class="px-4 py-3">{{ schedule.subject }}</td>
+
+                            <!-- Aula -->
+                            <td class="px-4 py-3">{{ schedule.classroom }}</td>
+
+                            <!-- Acciones -->
+                            <td class="px-4 py-3 text-center">
+                                <div class="inline-flex gap-2">
+                                    <button class="text-blue-600 hover:text-blue-800"
+                                        (click)="openScheduleDialog(schedule)" title="Editar">
+                                        ✏️
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-800" (click)="deleteSchedule(schedule)"
+                                        title="Eliminar">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- No data -->
+                <div *ngIf="allSchedules().length === 0" class="text-center py-10 text-gray-500">
+                    <div class="text-4xl mb-2">📅</div>
+                    <p>No hay horarios registrados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-layout>

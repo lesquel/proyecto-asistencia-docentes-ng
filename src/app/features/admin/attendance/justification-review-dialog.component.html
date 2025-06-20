@@ -1,0 +1,34 @@
+<h2 class="text-xl font-semibold mb-4">Revisar Justificación</h2>
+
+<div class="px-6 py-4">
+  <div class="space-y-4">
+    <div class="flex gap-3">
+      <strong class="min-w-[80px] text-gray-600">Docente:</strong>
+      <span>{{ teacherName }}</span>
+    </div>
+    <div class="flex gap-3">
+      <strong class="min-w-[80px] text-gray-600">Fecha:</strong>
+      <span>{{ justification?.date | date : 'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="flex gap-3">
+      <strong class="min-w-[80px] text-gray-600">Enviado:</strong>
+      <span>{{ justification?.createdAt | date : 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+    <div class="flex gap-3">
+      <strong class="min-w-[80px] text-gray-600">Motivo:</strong>
+    </div>
+    <div class="bg-gray-100 p-4 rounded-md leading-relaxed">
+      {{ justification?.reason }}
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-end gap-2 px-6 py-4 border-t">
+  <button class="text-sm text-gray-600 hover:text-gray-800" (click)="dialogRef.close()">Cancelar</button>
+  <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 flex items-center gap-1" (click)="onReject()">
+    <mat-icon>close</mat-icon> Rechazar
+  </button>
+  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1" (click)="onApprove()">
+    <mat-icon>check</mat-icon> Aprobar
+  </button>
+</div>

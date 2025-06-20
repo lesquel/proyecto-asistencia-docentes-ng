@@ -1,12 +1,18 @@
 import {
   Component,
-  EventEmitter,
   Inject,
-  Output,
   inject,
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Teacher } from '../../../core/models/user.model';
 import { TeacherService } from '../../../core/services/teacher.service';
 import { CommonModule } from '@angular/common';
@@ -18,10 +24,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './teacher-form-dialog.component.html',
 })
 export class TeacherFormDialogComponent {
-  @Output() closed = new EventEmitter<void>();
-
   private fb = inject(FormBuilder);
   private teacherService = inject(TeacherService);
+  private dialogRef = inject(MatDialogRef<TeacherFormDialogComponent>);
 
   constructor(@Inject(MAT_DIALOG_DATA) public teacher?: Teacher) {}
 
@@ -59,11 +64,11 @@ export class TeacherFormDialogComponent {
         });
       }
 
-      this.closed.emit();
+      this.close(); // Cierra el diálogo correctamente
     }
   }
 
   close(): void {
-    this.closed.emit();
+    this.dialogRef.close();   
   }
 }

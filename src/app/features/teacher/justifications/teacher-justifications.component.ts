@@ -37,6 +37,8 @@ export class TeacherJustificationsComponent {
       route: '/teacher/justifications',
       icon: 'description',
     },
+    { label: "Horarios", route: "/teacher/schedule", icon: "schedule" },
+
   ];
 
   displayedColumns: string[] = [

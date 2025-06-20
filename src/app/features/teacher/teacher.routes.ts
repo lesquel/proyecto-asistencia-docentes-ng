@@ -10,6 +10,10 @@ export const teacherRoutes: Routes = [
     loadComponent: () => import("./attendance/teacher-attendance.component").then((m) => m.TeacherAttendanceComponent),
   },
   {
+    path: "schedule",
+    loadComponent: () => import("./schedule/teacher-schedule.component").then((m) => m.TeacherScheduleComponent),
+  },
+  {
     path: "justifications",
     loadComponent: () =>
       import("./justifications/teacher-justifications.component").then((m) => m.TeacherJustificationsComponent),

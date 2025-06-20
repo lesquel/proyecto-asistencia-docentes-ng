@@ -87,6 +87,8 @@ export class TeacherAttendanceComponent {
     { label: "Dashboard", route: "/teacher/dashboard", icon: "dashboard" },
     { label: "Asistencias", route: "/teacher/attendance", icon: "assignment" },
     { label: "Justificaciones", route: "/teacher/justifications", icon: "description" },
+    { label: "Horarios", route: "/teacher/schedule", icon: "schedule" },
+
   ]
 
   displayedColumns: string[] = ["date", "subject", "time", "checkIn", "checkOut", "status", "actions"]
