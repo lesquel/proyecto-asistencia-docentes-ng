@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -27,6 +27,8 @@ import { TeacherFormDialogComponent } from './teacher-form-dialog.component';
   templateUrl: './teacher-management.component.html',
 })
 export class TeacherManagementComponent {
+  teacher = signal<Teacher | null>(null);
+
   menuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
     { label: 'Docentes', route: '/admin/teachers', icon: 'people' },
@@ -49,12 +51,10 @@ export class TeacherManagementComponent {
   ) {}
 
   openTeacherDialog(teacher?: Teacher): void {
-    const dialogRef = this.dialog.open(TeacherFormDialogComponent, {
+    this.dialog.open(TeacherFormDialogComponent, {
       width: '500px',
       data: teacher,
     });
-
-    dialogRef.componentInstance.teacher = teacher;
   }
 
   deleteTeacher(teacher: Teacher): void {
