@@ -1,6 +1,6 @@
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Schedule } from "../../../core/models/user.model";
-import { Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { AttendanceService } from "../../../core/services/attendance.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { CommonModule } from "@angular/common";
@@ -26,6 +26,7 @@ import { MatButtonModule } from "@angular/material/button";
     MatNativeDateModule,
     MatButtonModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 mat-dialog-title>Solicitar Cambio de Horario</h2>
     <mat-dialog-content>

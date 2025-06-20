@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -26,6 +26,7 @@ import { ScheduleFormDialogComponent } from './schedule-form-dialog.component';
     MatChipsModule,
     LayoutComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './schedule-management.component.html',
 })
 export class ScheduleManagementComponent {

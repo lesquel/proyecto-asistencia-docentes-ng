@@ -1,4 +1,4 @@
-import { Component, computed, inject } from "@angular/core"
+import { ChangeDetectionStrategy, Component, computed, inject } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { MatCardModule } from "@angular/material/card"
 import { MatIconModule } from "@angular/material/icon"
@@ -25,12 +25,26 @@ import type { Schedule } from "../../../core/models/user.model"
     RouterModule,
     LayoutComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-layout [title]="'Panel del Docente'" [menuItems]="menuItems">
       <div class="teacher-dashboard-container">
         <div class="welcome-section">
           <h1>Bienvenido, {{currentTeacher()?.name}}</h1>
           <p>{{currentTeacher()?.department}} - {{currentTeacher()?.employeeId}}</p>
+        </div>
+
+        <!-- Debug info -->
+        <div class="debug-section" *ngIf="showDebug">
+          <mat-card>
+            <mat-card-content>
+              <h3>Debug Info:</h3>
+              <p>Profesor ID: {{currentTeacher()?.id}}</p>
+              <p>Día actual: {{today.getDay()}} ({{getDayName(today.getDay())}})</p>
+              <p>Horarios hoy: {{todaySchedules().length}}</p>
+              <button mat-button (click)="debugAttendances()">Ver Asistencias</button>
+            </mat-card-content>
+          </mat-card>
         </div>
 
         <div class="stats-grid">
@@ -87,11 +101,14 @@ import type { Schedule } from "../../../core/models/user.model"
                   Registrar Todas las Asistencias de Hoy
                 </button>
               </div>
+              
               <div *ngIf="todaySchedules().length === 0" class="no-schedules">
                 <mat-icon>event_available</mat-icon>
                 <p>No tienes clases programadas para hoy</p>
+                <p><small>Día actual: {{getDayName(today.getDay())}}</small></p>
               </div>
-              <div *ngFor="let schedule of todaySchedules()" class="schedule-item">
+              
+              <div *ngFor="let schedule of todaySchedules(); trackBy: trackByScheduleId" class="schedule-item">
                 <div class="schedule-info">
                   <h3>{{schedule.subject}}</h3>
                   <p class="schedule-time">
@@ -111,27 +128,31 @@ import type { Schedule } from "../../../core/models/user.model"
                   </div>
                 </div>
                 <div class="schedule-actions">
+                  <!-- Botón simple para registrar asistencia -->
                   <button mat-raised-button 
                           color="primary" 
-                          (click)="checkIn(schedule)"
-                          [disabled]="hasCheckedIn(schedule)"
-                          *ngIf="!hasCheckedIn(schedule)">
-                    <mat-icon>login</mat-icon>
-                    Registrar Entrada
+                          (click)="registerAttendance(schedule)"
+                          [disabled]="isAttendanceRegistered(schedule)"
+                          class="register-btn">
+                    <mat-icon>{{isAttendanceRegistered(schedule) ? 'check_circle' : 'how_to_reg'}}</mat-icon>
+                    {{isAttendanceRegistered(schedule) ? 'Registrado' : 'Registrar Asistencia'}}
                   </button>
                   
-                  <button mat-raised-button 
-                          color="accent" 
-                          (click)="checkOut(schedule)"
-                          [disabled]="!canCheckOut(schedule)"
-                          *ngIf="hasCheckedIn(schedule) && !hasCheckedOut(schedule)">
-                    <mat-icon>logout</mat-icon>
-                    Registrar Salida
-                  </button>
-
-                  <div *ngIf="hasCheckedOut(schedule)" class="completed-status">
-                    <mat-icon color="primary">check_circle</mat-icon>
-                    <span>Clase Completada</span>
+                  <!-- Botones de entrada y salida (opcional) -->
+                  <div class="detailed-actions" *ngIf="isAttendanceRegistered(schedule)">
+                    <button mat-stroked-button 
+                            color="accent" 
+                            (click)="checkOut(schedule)"
+                            [disabled]="hasCheckedOut(schedule)"
+                            *ngIf="!hasCheckedOut(schedule)">
+                      <mat-icon>logout</mat-icon>
+                      Registrar Salida
+                    </button>
+                    
+                    <div *ngIf="hasCheckedOut(schedule)" class="completed-status">
+                      <mat-icon color="primary">check_circle</mat-icon>
+                      <span>Clase Completada</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -148,9 +169,17 @@ import type { Schedule } from "../../../core/models/user.model"
                   <mat-icon>assignment</mat-icon>
                   Ver Asistencias
                 </button>
-                <button mat-raised-button color="accent" routerLink="/teacher/justifications">
+                <button mat-raised-button color="accent" routerLink="/teacher/schedule">
+                  <mat-icon>schedule</mat-icon>
+                  Ver Horarios
+                </button>
+                <button mat-raised-button color="warn" routerLink="/teacher/justifications">
                   <mat-icon>description</mat-icon>
                   Justificaciones
+                </button>
+                <button mat-button (click)="toggleDebug()">
+                  <mat-icon>bug_report</mat-icon>
+                  {{showDebug ? 'Ocultar' : 'Mostrar'}} Debug
                 </button>
               </div>
             </mat-card-content>
@@ -201,6 +230,15 @@ import type { Schedule } from "../../../core/models/user.model"
       margin: 8px 0 0 0;
       color: #666;
       font-size: 16px;
+    }
+
+    .debug-section {
+      margin-bottom: 20px;
+    }
+
+    .debug-section mat-card {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
     }
 
     .stats-grid {
@@ -337,10 +375,22 @@ import type { Schedule } from "../../../core/models/user.model"
       display: flex;
       flex-direction: column;
       gap: 8px;
-      min-width: 180px;
+      min-width: 200px;
     }
 
-    .schedule-actions button {
+    .register-btn {
+      width: 100%;
+      height: 48px;
+      font-size: 16px;
+    }
+
+    .detailed-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detailed-actions button {
       width: 100%;
     }
 
@@ -350,6 +400,8 @@ import type { Schedule } from "../../../core/models/user.model"
       gap: 8px;
       color: #4CAF50;
       font-weight: 500;
+      justify-content: center;
+      padding: 8px;
     }
 
     .action-buttons {
@@ -439,7 +491,6 @@ import type { Schedule } from "../../../core/models/user.model"
   ],
 })
 export class TeacherDashboardComponent {
-
   private authService: AuthService = inject(AuthService);
   private teacherService: TeacherService = inject(TeacherService);
   private attendanceService: AttendanceService = inject(AttendanceService);
@@ -453,6 +504,7 @@ export class TeacherDashboardComponent {
   ]
 
   today = new Date()
+  showDebug = false
 
   currentTeacher = computed(() => {
     const user = this.authService.currentUser()
@@ -513,39 +565,67 @@ export class TeacherDashboardComponent {
 
 
 
+  trackByScheduleId(index: number, schedule: Schedule): string {
+    return schedule.id
+  }
+
   getDayName(dayOfWeek: number): string {
     const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
     return days[dayOfWeek]
   }
 
-  checkIn(schedule: Schedule): void {
+  toggleDebug(): void {
+    this.showDebug = !this.showDebug
+  }
+
+  debugAttendances(): void {
+    this.attendanceService.debugAttendances()
     const teacher = this.currentTeacher()
     if (teacher) {
-      try {
-        this.attendanceService.checkIn(teacher.id, schedule.id)
-        this.snackBar.open(`✅ Asistencia registrada para ${schedule.subject}`, "Cerrar", {
-          duration: 4000,
-          panelClass: ["success-snackbar"],
-        })
-      } catch (error) {
-        this.snackBar.open("❌ Error al registrar la asistencia", "Cerrar", {
-          duration: 3000,
-          panelClass: ["error-snackbar"],
-        })
-      }
+      console.log("Asistencias del profesor:", this.attendanceService.getAttendancesByTeacher(teacher.id))
+    }
+  }
+
+  registerAttendance(schedule: Schedule): void {
+    const teacher = this.currentTeacher()
+    if (!teacher) {
+      this.snackBar.open("❌ Error: No se pudo identificar al profesor", "Cerrar", {
+        duration: 3000,
+        panelClass: ["error-snackbar"],
+      })
+      return
+    }
+
+    console.log("Registrando asistencia para:", {
+      teacherId: teacher.id,
+      scheduleId: schedule.id,
+      subject: schedule.subject,
+    })
+
+    const success = this.attendanceService.markPresent(teacher.id, schedule.id)
+
+    if (success) {
+      this.snackBar.open(`✅ Asistencia registrada para ${schedule.subject}`, "Cerrar", {
+        duration: 4000,
+        panelClass: ["success-snackbar"],
+      })
+    } else {
+      this.snackBar.open(`ℹ️ Ya tienes registrada la asistencia para ${schedule.subject}`, "Cerrar", {
+        duration: 3000,
+      })
     }
   }
 
   checkOut(schedule: Schedule): void {
     const teacher = this.currentTeacher()
     if (teacher) {
-      try {
-        this.attendanceService.checkOut(teacher.id, schedule.id)
+      const success = this.attendanceService.checkOut(teacher.id, schedule.id)
+      if (success) {
         this.snackBar.open(`Salida registrada para ${schedule.subject}`, "Cerrar", {
           duration: 3000,
           panelClass: ["success-snackbar"],
         })
-      } catch (error) {
+      } else {
         this.snackBar.open("Error al registrar la salida", "Cerrar", {
           duration: 3000,
           panelClass: ["error-snackbar"],
@@ -554,82 +634,44 @@ export class TeacherDashboardComponent {
     }
   }
 
-  hasCheckedIn(schedule: Schedule): boolean {
+  isAttendanceRegistered(schedule: Schedule): boolean {
     const teacher = this.currentTeacher()
     if (!teacher) return false
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const attendance = this.attendanceService
-      .attendances()
-      .find(
-        (a) =>
-          a.teacherId === teacher.id &&
-          a.scheduleId === schedule.id &&
-          a.date.getTime() === today.getTime() &&
-          a.checkIn,
-      )
-
-    return !!attendance
+    return this.attendanceService.hasAttendanceToday(teacher.id, schedule.id)
   }
 
   hasCheckedOut(schedule: Schedule): boolean {
     const teacher = this.currentTeacher()
     if (!teacher) return false
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const attendance = this.attendanceService
-      .attendances()
-      .find(
-        (a) =>
-          a.teacherId === teacher.id &&
-          a.scheduleId === schedule.id &&
-          a.date.getTime() === today.getTime() &&
-          a.checkOut,
-      )
-
-    return !!attendance
-  }
-
-  canCheckOut(schedule: Schedule): boolean {
-    return this.hasCheckedIn(schedule) && !this.hasCheckedOut(schedule)
+    const status = this.attendanceService.getTodayAttendanceStatus(teacher.id, schedule.id)
+    return status.hasCheckOut
   }
 
   getAttendanceStatus(schedule: Schedule): { text: string; color: string; icon: string; time?: string } | null {
     const teacher = this.currentTeacher()
     if (!teacher) return null
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    const status = this.attendanceService.getTodayAttendanceStatus(teacher.id, schedule.id)
 
-    const attendance = this.attendanceService
-      .attendances()
-      .find((a) => a.teacherId === teacher.id && a.scheduleId === schedule.id && a.date.getTime() === today.getTime())
+    if (!status.hasCheckIn) return null
 
-    if (!attendance) return null
-
-    if (attendance.checkOut) {
+    if (status.hasCheckOut) {
       return {
         text: "Completado",
         color: "primary",
         icon: "check_circle",
-        time: `Salida: ${attendance.checkOut.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`,
+        time: `Salida: ${status.checkOutTime?.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`,
       }
     }
 
-    if (attendance.checkIn) {
-      return {
-        text: "En Clase",
-        color: "accent",
-        icon: "schedule",
-        time: `Entrada: ${attendance.checkIn.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`,
-      }
+    return {
+      text: "Presente",
+      color: "accent",
+      icon: "schedule",
+      time: `Entrada: ${status.checkInTime?.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}`,
     }
-
-    return null
   }
 
   registerAllTodayClasses(): void {
@@ -640,9 +682,11 @@ export class TeacherDashboardComponent {
     let registered = 0
 
     todaySchedules.forEach((schedule) => {
-      if (!this.hasCheckedIn(schedule)) {
-        this.attendanceService.checkIn(teacher.id, schedule.id)
-        registered++
+      if (!this.isAttendanceRegistered(schedule)) {
+        const success = this.attendanceService.markPresent(teacher.id, schedule.id)
+        if (success) {
+          registered++
+        }
       }
     })
 

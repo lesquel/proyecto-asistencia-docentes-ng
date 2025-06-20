@@ -16,6 +16,10 @@ export class AttendanceService {
   }
 
   private loadData(): void {
+    if (typeof localStorage === "undefined") {
+      return
+    }
+
     // Load attendances
     const storedAttendances = localStorage.getItem("attendances")
     if (storedAttendances) {
@@ -50,45 +54,116 @@ export class AttendanceService {
   }
 
   private saveAttendances(): void {
-    localStorage.setItem("attendances", JSON.stringify(this.attendancesSignal()))
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("attendances", JSON.stringify(this.attendancesSignal()))
+    }
   }
 
   private saveJustifications(): void {
-    localStorage.setItem("justifications", JSON.stringify(this.justificationsSignal()))
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("justifications", JSON.stringify(this.justificationsSignal()))
+    }
   }
 
-  checkIn(teacherId: string, scheduleId: string): void {
+  checkIn(teacherId: string, scheduleId: string): boolean {
+    try {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      // Verificar si ya existe una asistencia para hoy
+      const existingAttendance = this.attendancesSignal().find(
+        (a) => a.teacherId === teacherId && a.scheduleId === scheduleId && a.date.getTime() === today.getTime(),
+      )
+
+      if (existingAttendance && existingAttendance.checkIn) {
+        console.log("Ya existe asistencia registrada para hoy")
+        return false // Ya registrado
+      }
+
+      if (existingAttendance) {
+        // Actualizar asistencia existente
+        const updatedAttendances = this.attendancesSignal().map((a) =>
+          a.id === existingAttendance.id ? { ...a, checkIn: new Date(), status: "present" as const } : a,
+        )
+        this.attendancesSignal.set(updatedAttendances)
+      } else {
+        // Crear nueva asistencia
+        const newAttendance: Attendance = {
+          id: this.generateId(),
+          teacherId,
+          scheduleId,
+          date: today,
+          checkIn: new Date(),
+          status: "present",
+        }
+
+        this.attendancesSignal.set([...this.attendancesSignal(), newAttendance])
+      }
+
+      this.saveAttendances()
+      console.log("Asistencia registrada exitosamente")
+      return true
+    } catch (error) {
+      console.error("Error al registrar asistencia:", error)
+      return false
+    }
+  }
+
+  checkOut(teacherId: string, scheduleId: string): boolean {
+    try {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      const attendance = this.attendancesSignal().find(
+        (a) => a.teacherId === teacherId && a.scheduleId === scheduleId && a.date.getTime() === today.getTime(),
+      )
+
+      if (attendance && attendance.checkIn) {
+        const updatedAttendances = this.attendancesSignal().map((a) =>
+          a.id === attendance.id ? { ...a, checkOut: new Date() } : a,
+        )
+        this.attendancesSignal.set(updatedAttendances)
+        this.saveAttendances()
+        console.log("Salida registrada exitosamente")
+        return true
+      }
+
+      console.log("No se puede registrar salida sin entrada")
+      return false
+    } catch (error) {
+      console.error("Error al registrar salida:", error)
+      return false
+    }
+  }
+
+  // Método específico para registrar asistencia simple (solo marcar presente)
+  markPresent(teacherId: string, scheduleId: string): boolean {
+    return this.checkIn(teacherId, scheduleId)
+  }
+
+  // Verificar si ya se registró asistencia hoy
+  hasAttendanceToday(teacherId: string, scheduleId: string): boolean {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    const existingAttendance = this.attendancesSignal().find(
-      (a) => a.teacherId === teacherId && a.scheduleId === scheduleId && a.date.getTime() === today.getTime(),
+    const attendance = this.attendancesSignal().find(
+      (a) =>
+        a.teacherId === teacherId && a.scheduleId === scheduleId && a.date.getTime() === today.getTime() && a.checkIn,
     )
 
-    if (existingAttendance) {
-      // Update existing attendance
-      const updatedAttendances = this.attendancesSignal().map((a) =>
-        a.id === existingAttendance.id ? { ...a, checkIn: new Date(), status: "present" as const } : a,
-      )
-      this.attendancesSignal.set(updatedAttendances)
-    } else {
-      // Create new attendance
-      const newAttendance: Attendance = {
-        id: this.generateId(),
-        teacherId,
-        scheduleId,
-        date: today,
-        checkIn: new Date(),
-        status: "present",
-      }
-
-      this.attendancesSignal.set([...this.attendancesSignal(), newAttendance])
-    }
-
-    this.saveAttendances()
+    return !!attendance
   }
 
-  checkOut(teacherId: string, scheduleId: string): void {
+  // Obtener estado de asistencia para hoy
+  getTodayAttendanceStatus(
+    teacherId: string,
+    scheduleId: string,
+  ): {
+    hasCheckIn: boolean
+    hasCheckOut: boolean
+    checkInTime?: Date
+    checkOutTime?: Date
+  } {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
@@ -96,12 +171,15 @@ export class AttendanceService {
       (a) => a.teacherId === teacherId && a.scheduleId === scheduleId && a.date.getTime() === today.getTime(),
     )
 
-    if (attendance) {
-      const updatedAttendances = this.attendancesSignal().map((a) =>
-        a.id === attendance.id ? { ...a, checkOut: new Date() } : a,
-      )
-      this.attendancesSignal.set(updatedAttendances)
-      this.saveAttendances()
+    if (!attendance) {
+      return { hasCheckIn: false, hasCheckOut: false }
+    }
+
+    return {
+      hasCheckIn: !!attendance.checkIn,
+      hasCheckOut: !!attendance.checkOut,
+      checkInTime: attendance.checkIn,
+      checkOutTime: attendance.checkOut,
     }
   }
 
@@ -147,5 +225,10 @@ export class AttendanceService {
 
   private generateId(): string {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9)
+  }
+
+  // Método para debug - ver todas las asistencias
+  debugAttendances(): void {
+    console.log("Todas las asistencias:", this.attendancesSignal())
   }
 }

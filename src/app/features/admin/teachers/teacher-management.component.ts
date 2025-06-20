@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -24,6 +24,7 @@ import { TeacherFormDialogComponent } from './teacher-form-dialog.component';
     MatIconModule,
     LayoutComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './teacher-management.component.html',
 })
 export class TeacherManagementComponent {

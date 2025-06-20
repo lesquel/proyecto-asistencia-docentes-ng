@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Inject,
   inject,
@@ -21,6 +22,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-teacher-form-dialog',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatDialogModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './teacher-form-dialog.component.html',
 })
 export class TeacherFormDialogComponent {

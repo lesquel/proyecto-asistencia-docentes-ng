@@ -1,10 +1,6 @@
-import { Component, inject, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -25,6 +21,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatIconModule,
     MatProgressSpinnerModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
 })
 export class LoginComponent {

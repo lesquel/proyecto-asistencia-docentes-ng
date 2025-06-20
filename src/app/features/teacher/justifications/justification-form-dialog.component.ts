@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -28,6 +28,7 @@ import { MatDialogRef } from '@angular/material/dialog';
     MatNativeDateModule,
     MatButtonModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './justification-form-dialog.component.html',
 })
 export class JustificationFormDialogComponent {

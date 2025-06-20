@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -26,6 +26,7 @@ import { JustificationFormDialogComponent } from './justification-form-dialog.co
     MatChipsModule,
     LayoutComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './teacher-justifications.component.html',
 })
 export class TeacherJustificationsComponent {

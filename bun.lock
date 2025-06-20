@@ -19,6 +19,7 @@
         "@mui/material": "^7.1.2",
         "@tailwindcss/postcss": "^4.1.10",
         "express": "^5.1.0",
+        "lucide-angular": "^0.518.0",
         "postcss": "^8.5.6",
         "rxjs": "~7.8.0",
         "tailwindcss": "^4.1.10",
@@ -891,6 +892,8 @@
     "loose-envify": ["loose-envify@1.4.0", "", { "dependencies": { "js-tokens": "^3.0.0 || ^4.0.0" }, "bin": { "loose-envify": "cli.js" } }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="],
+
+    "lucide-angular": ["lucide-angular@0.518.0", "", { "dependencies": { "tslib": "^2.3.0" }, "peerDependencies": { "@angular/common": "13.x - 20.x", "@angular/core": "13.x - 20.x" } }, "sha512-PvEBcqs/96Knh6Rgi9vObZE7js0EFvvZZ336iuYOaMLm7XDVJuIsOvpp3y/Cyjjqc/bzJ8id2lQbWzS0Rx0+cQ=="],
 
     "magic-string": ["magic-string@0.30.17", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0" } }, "sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA=="],
 

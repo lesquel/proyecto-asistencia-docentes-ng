@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -39,6 +39,7 @@ import { JustificationReviewDialogComponent } from './justification-review-dialo
     MatTabsModule,
     LayoutComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './attendance-management.component.html',
 })
 export class AttendanceManagementComponent {

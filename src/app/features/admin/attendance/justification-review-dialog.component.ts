@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { AttendanceJustification } from '../../../core/models/user.model';
   selector: 'app-justification-review-dialog',
   standalone: true,
   imports: [CommonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './justification-review-dialog.component.html',
 })
 export class JustificationReviewDialogComponent {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -25,6 +25,7 @@ import { TeacherService } from '../../../core/services/teacher.service';
     MatSelectModule,
     MatButtonModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './schedule-form-dialog.component.html',
 })
 export class ScheduleFormDialogComponent {
