@@ -1,0 +1,92 @@
+<app-layout [title]="'Mis Asistencias'" [menuItems]="menuItems">
+    <div class="max-w-screen-xl mx-auto p-4">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+            <div class="border-b px-6 py-4">
+                <h2 class="text-xl font-semibold">Registro de Asistencias</h2>
+                <p class="text-sm text-gray-600">Historial de asistencias y horarios</p>
+            </div>
+
+            <div class="px-6 py-4 space-y-4">
+                <!-- Filtros -->
+                <div class="flex flex-wrap items-center gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Filtrar por fecha</label>
+                        <input type="date" (change)="onDateChange($event)"
+                            class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+                    </div>
+                    <button (click)="clearDateFilter()"
+                        class="flex items-center gap-1 text-sm text-red-600 hover:text-red-800">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Limpiar Filtro
+                    </button>
+                </div>
+
+                <!-- Tabla -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 border border-gray-300 text-sm text-left">
+                        <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+                            <tr>
+                                <th class="px-4 py-2">Fecha</th>
+                                <th class="px-4 py-2">Materia</th>
+                                <th class="px-4 py-2">Horario</th>
+                                <th class="px-4 py-2">Entrada</th>
+                                <th class="px-4 py-2">Salida</th>
+                                <th class="px-4 py-2">Estado</th>
+                                <th class="px-4 py-2">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let attendance of filteredAttendances()"
+                                class="odd:bg-white even:bg-gray-50 hover:bg-blue-50">
+                                <td class="px-4 py-2">{{ attendance.date | date: 'dd/MM/yyyy' }}</td>
+                                <td class="px-4 py-2">
+                                    {{ getScheduleInfo(attendance.scheduleId)?.subject || 'N/A' }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    {{ getScheduleInfo(attendance.scheduleId)?.startTime }} -
+                                    {{ getScheduleInfo(attendance.scheduleId)?.endTime }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    {{ attendance.checkIn ? (attendance.checkIn | date: 'HH:mm') : '-' }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    {{ attendance.checkOut ? (attendance.checkOut | date: 'HH:mm') : '-' }}
+                                </td>
+                                <td class="px-4 py-2">
+                                    <span [ngClass]="{
+                      'bg-green-100 text-green-800': getStatusColor(attendance.status) === 'primary',
+                      'bg-blue-100 text-blue-800': getStatusColor(attendance.status) === 'accent',
+                      'bg-red-100 text-red-800': getStatusColor(attendance.status) === 'warn'
+                    }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                                        {{ getStatusText(attendance.status) }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <button *ngIf="canCheckOut(attendance)" (click)="checkOut(attendance)"
+                                        class="text-blue-600 hover:text-blue-800">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17 16l4-4m0 0l-4-4m4 4H7" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div *ngIf="filteredAttendances().length === 0" class="text-center text-gray-600 py-10">
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3M16 7V3M4 11h16M4 19h16" />
+                        </svg>
+                        <p>No se encontraron registros de asistencia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-layout>

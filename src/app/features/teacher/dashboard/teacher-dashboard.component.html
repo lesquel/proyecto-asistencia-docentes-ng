@@ -1,0 +1,91 @@
+<app-layout [title]="'Panel del Docente'" [menuItems]="menuItems">
+    <div class="max-w-screen-xl mx-auto px-4 py-6">
+        <!-- Bienvenida -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Bienvenido, {{ currentTeacher()?.name }}</h1>
+            <p class="text-gray-600 mt-1">
+                {{ currentTeacher()?.department }} - {{ currentTeacher()?.employeeId }}
+            </p>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
+                <span class="text-blue-500 text-4xl">📅</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">{{ totalSchedules() }}</h2>
+                    <p class="text-sm text-gray-600">Horarios Asignados</p>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
+                <span class="text-green-500 text-4xl">✅</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">{{ monthlyAttendances() }}</h2>
+                    <p class="text-sm text-gray-600">Asistencias Este Mes</p>
+                </div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-4 flex items-center gap-4">
+                <span class="text-yellow-500 text-4xl">⏳</span>
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">{{ pendingJustifications() }}</h2>
+                    <p class="text-sm text-gray-600">Justificaciones Pendientes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Horarios de hoy -->
+            <div class="lg:col-span-2 bg-white shadow rounded-lg">
+                <div class="border-b px-4 py-3">
+                    <h3 class="text-lg font-semibold text-gray-800">Horarios de Hoy</h3>
+                    <p class="text-sm text-gray-500">
+                        {{ getDayName(today.getDay()) }}, {{ today.toLocaleDateString() }}
+                    </p>
+                </div>
+                <div class="p-4 space-y-4">
+                    <div *ngIf="todaySchedules().length === 0" class="text-center text-gray-500 py-8">
+                        <div class="text-4xl mb-2">📆</div>
+                        <p>No tienes clases programadas para hoy</p>
+                    </div>
+
+                    <div *ngFor="let schedule of todaySchedules()"
+                        class="border rounded-lg p-4 flex flex-col sm:flex-row justify-between gap-4">
+                        <div>
+                            <h4 class="text-md font-semibold text-gray-800">{{ schedule.subject }}</h4>
+                            <p class="text-sm text-gray-600">{{ schedule.startTime }} - {{ schedule.endTime }}</p>
+                            <p class="text-sm text-gray-600">Aula: {{ schedule.classroom }}</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <button (click)="checkIn(schedule)" [disabled]="hasCheckedIn(schedule)" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-white font-medium rounded-md
+                disabled:opacity-50 disabled:cursor-not-allowed
+                bg-blue-600 hover:bg-blue-700 transition">
+                                <span class="mr-2">🔓</span>
+                                {{ hasCheckedIn(schedule) ? 'Registrado' : 'Registrar Entrada' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones rápidas -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="border-b px-4 py-3">
+                    <h3 class="text-lg font-semibold text-gray-800">Acciones Rápidas</h3>
+                </div>
+                <div class="p-4 flex flex-col gap-4">
+                    <a routerLink="/teacher/attendance"
+                        class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-md transition">
+                        📋 Ver Asistencias
+                    </a>
+                    <a routerLink="/teacher/justifications"
+                        class="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 rounded-md transition">
+                        📄 Justificaciones
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-layout>

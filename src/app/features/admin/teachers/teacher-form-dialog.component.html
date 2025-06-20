@@ -1,0 +1,103 @@
+<div class="w-full max-w-lg p-6 bg-white rounded shadow-lg">
+  <h2 class="text-xl font-semibold mb-4">
+    {{ teacher ? 'Editar' : 'Agregar' }} Docente
+  </h2>
+
+  <form [formGroup]="teacherForm" class="space-y-4">
+    <!-- Nombre -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo</label>
+      <input
+        type="text"
+        formControlName="name"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        placeholder="Nombre completo"
+      />
+      <div *ngIf="teacherForm.get('name')?.hasError('required') && teacherForm.get('name')?.touched"
+           class="text-sm text-red-600 mt-1">
+        El nombre es requerido
+      </div>
+    </div>
+
+    <!-- Correo -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="correo@escuela.com"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+      />
+      <div *ngIf="teacherForm.get('email')?.touched" class="text-sm text-red-600 mt-1">
+        <div *ngIf="teacherForm.get('email')?.hasError('required')">El correo es requerido</div>
+        <div *ngIf="teacherForm.get('email')?.hasError('email')">Ingrese un correo válido</div>
+      </div>
+    </div>
+
+    <!-- ID Empleado -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">ID de Empleado</label>
+      <input
+        type="text"
+        formControlName="employeeId"
+        placeholder="T001"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+      />
+      <div *ngIf="teacherForm.get('employeeId')?.hasError('required') && teacherForm.get('employeeId')?.touched"
+           class="text-sm text-red-600 mt-1">
+        El ID de empleado es requerido
+      </div>
+    </div>
+
+    <!-- Departamento -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Departamento</label>
+      <select
+        formControlName="department"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+      >
+        <option value="">Seleccione un departamento</option>
+        <option value="Matemáticas">Matemáticas</option>
+        <option value="Historia">Historia</option>
+        <option value="Ciencias">Ciencias</option>
+        <option value="Literatura">Literatura</option>
+        <option value="Inglés">Inglés</option>
+        <option value="Educación Física">Educación Física</option>
+        <option value="Arte">Arte</option>
+      </select>
+      <div *ngIf="teacherForm.get('department')?.hasError('required') && teacherForm.get('department')?.touched"
+           class="text-sm text-red-600 mt-1">
+        El departamento es requerido
+      </div>
+    </div>
+
+    <!-- Teléfono -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+      <input
+        type="text"
+        formControlName="phone"
+        placeholder="555-0123"
+        class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+      />
+    </div>
+  </form>
+
+  <div class="mt-6 flex justify-end space-x-2">
+    <button
+      type="button"
+      (click)="close()"
+      class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      (click)="onSave()"
+      [disabled]="teacherForm.invalid"
+      class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded disabled:opacity-50"
+    >
+      {{ teacher ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </div>
+</div>

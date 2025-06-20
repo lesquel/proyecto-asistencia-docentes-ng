@@ -1,0 +1,62 @@
+<app-layout [title]="'Gestión de Docentes'" [menuItems]="menuItems">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">Lista de Docentes</h2>
+                <p class="text-sm text-gray-500">Gestionar información de docentes</p>
+            </div>
+
+            <div class="px-6 py-4 flex justify-end">
+                <button (click)="openTeacherDialog()"
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 transition">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 4v16m8-8H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                    Agregar Docente
+                </button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th class="px-4 py-2">ID Empleado</th>
+                            <th class="px-4 py-2">Nombre</th>
+                            <th class="px-4 py-2">Correo</th>
+                            <th class="px-4 py-2">Departamento</th>
+                            <th class="px-4 py-2">Horarios</th>
+                            <th class="px-4 py-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let teacher of teacherService.teachers()" class="border-t hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ teacher.employeeId }}</td>
+                            <td class="px-4 py-2">{{ teacher.name }}</td>
+                            <td class="px-4 py-2">{{ teacher.email }}</td>
+                            <td class="px-4 py-2">{{ teacher.department }}</td>
+                            <td class="px-4 py-2">{{ teacher.schedules.length }}</td>
+                            <td class="px-4 py-2">
+                                <div class="flex space-x-2">
+                                    <button (click)="openTeacherDialog(teacher)"
+                                        class="text-blue-600 hover:text-blue-800" title="Editar">
+                                        ✏️
+                                    </button>
+                                    <button (click)="deleteTeacher(teacher)" class="text-red-600 hover:text-red-800"
+                                        title="Eliminar">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="teacherService.teachers().length === 0">
+                            <td colspan="6" class="px-4 py-4 text-center text-gray-500">
+                                No hay docentes registrados.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-layout>

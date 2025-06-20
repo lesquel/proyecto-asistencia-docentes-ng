@@ -1,0 +1,99 @@
+<app-layout [title]="'Panel de Administración'" [menuItems]="menuItems">
+  <div class="max-w-screen-xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+      Bienvenido al Panel de Administración
+    </h1>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div class="bg-white shadow rounded-lg p-6 flex items-center space-x-4">
+        <mat-icon class="text-green-500 text-5xl">people</mat-icon>
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800">{{ totalTeachers() }}</h2>
+          <p class="text-gray-500 text-sm">Docentes Registrados</p>
+        </div>
+      </div>
+
+      <div class="bg-white shadow rounded-lg p-6 flex items-center space-x-4">
+        <mat-icon class="text-blue-500 text-5xl">schedule</mat-icon>
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800">{{ totalSchedules() }}</h2>
+          <p class="text-gray-500 text-sm">Horarios Asignados</p>
+        </div>
+      </div>
+
+      <div class="bg-white shadow rounded-lg p-6 flex items-center space-x-4">
+        <mat-icon class="text-yellow-500 text-5xl">check_circle</mat-icon>
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800">{{ todayAttendances() }}</h2>
+          <p class="text-gray-500 text-sm">Asistencias Hoy</p>
+        </div>
+      </div>
+
+      <div class="bg-white shadow rounded-lg p-6 flex items-center space-x-4">
+        <mat-icon class="text-red-500 text-5xl">pending</mat-icon>
+        <div>
+          <h2 class="text-3xl font-bold text-gray-800">{{ pendingJustifications() }}</h2>
+          <p class="text-gray-500 text-sm">Justificaciones Pendientes</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white shadow rounded-lg">
+        <div class="p-4 border-b">
+          <h3 class="text-xl font-semibold text-gray-800">Gestión de Docentes</h3>
+          <p class="text-sm text-gray-500">Administrar información de docentes</p>
+        </div>
+        <div class="p-4">
+          <button
+            mat-raised-button
+            color="primary"
+            routerLink="/admin/teachers"
+            class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+          >
+            <mat-icon>people</mat-icon>
+            Gestionar Docentes
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white shadow rounded-lg">
+        <div class="p-4 border-b">
+          <h3 class="text-xl font-semibold text-gray-800">Horarios</h3>
+          <p class="text-sm text-gray-500">Crear y asignar horarios</p>
+        </div>
+        <div class="p-4">
+          <button
+            mat-raised-button
+            color="primary"
+            routerLink="/admin/schedules"
+            class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+          >
+            <mat-icon>schedule</mat-icon>
+            Gestionar Horarios
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white shadow rounded-lg">
+        <div class="p-4 border-b">
+          <h3 class="text-xl font-semibold text-gray-800">Asistencias</h3>
+          <p class="text-sm text-gray-500">Revisar registros de asistencia</p>
+        </div>
+        <div class="p-4">
+          <button
+            mat-raised-button
+            color="primary"
+            routerLink="/admin/attendance"
+            class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+          >
+            <mat-icon>assignment</mat-icon>
+            Ver Asistencias
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-layout>
