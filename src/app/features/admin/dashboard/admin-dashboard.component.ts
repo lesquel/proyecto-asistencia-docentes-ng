@@ -13,7 +13,6 @@ import { AttendanceService } from '../../../core/services/attendance.service';
 
 @Component({
   selector: 'app-admin-dashboard',
-  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
