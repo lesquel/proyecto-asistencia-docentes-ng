@@ -26,7 +26,6 @@ import { MatButtonModule } from "@angular/material/button";
     MatNativeDateModule,
     MatButtonModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 mat-dialog-title>Solicitar Cambio de Horario</h2>
     <mat-dialog-content>

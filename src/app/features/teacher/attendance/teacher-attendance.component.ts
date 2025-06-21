@@ -42,55 +42,6 @@ import type { Attendance } from '../../../core/models/user.model';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './teacher-attendance.component.html',
-  styles: [
-    `
-      .attendance-container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .filters {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-      }
-
-      .table-container {
-        overflow-x: auto;
-      }
-
-      .attendance-table {
-        width: 100%;
-      }
-
-      .attendance-table th,
-      .attendance-table td {
-        padding: 12px 8px;
-      }
-
-      .no-data {
-        text-align: center;
-        padding: 40px 20px;
-        color: #666;
-      }
-
-      .no-data mat-icon {
-        font-size: 48px;
-        width: 48px;
-        height: 48px;
-        margin-bottom: 16px;
-      }
-
-      @media (max-width: 768px) {
-        .filters {
-          flex-direction: column;
-          align-items: stretch;
-        }
-      }
-    `,
-  ],
 })
 export class TeacherAttendanceComponent {
   menuItems: MenuItem[] = [
