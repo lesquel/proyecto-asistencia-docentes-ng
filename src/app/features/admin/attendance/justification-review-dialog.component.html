@@ -1,34 +1,72 @@
-<h2 class="text-xl font-semibold mb-4">Revisar Justificación</h2>
+<div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-blue-100">
+  <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+    <div class="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg">
+      <mat-icon class="text-white text-lg">assignment_ind</mat-icon>
+    </div>
+    Revisar Justificación
+  </h2>
+</div>
 
-<div class="px-6 py-4">
-  <div class="space-y-4">
-    <div class="flex gap-3">
-      <strong class="min-w-[80px] text-gray-600">Docente:</strong>
-      <span>{{ teacherName }}</span>
+<div class="px-6 py-6">
+  <div class="space-y-5">
+    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+      <div class="flex items-center gap-3">
+        <mat-icon class="text-blue-600">person</mat-icon>
+        <div>
+          <span class="text-sm text-gray-500 font-medium">Docente:</span>
+          <p class="text-lg font-semibold text-gray-900">{{ teacherName }}</p>
+        </div>
+      </div>
     </div>
-    <div class="flex gap-3">
-      <strong class="min-w-[80px] text-gray-600">Fecha:</strong>
-      <span>{{ justification?.date | date : 'dd/MM/yyyy' }}</span>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-white border border-amber-200 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center gap-2 mb-1">
+          <mat-icon class="text-amber-600 text-sm">calendar_today</mat-icon>
+          <span class="text-sm text-gray-500 font-medium">Fecha:</span>
+        </div>
+        <p class="text-gray-900 font-semibold">{{ justification?.date | date : 'dd/MM/yyyy' }}</p>
+      </div>
+
+      <div class="bg-white border border-green-200 rounded-xl p-4 shadow-sm">
+        <div class="flex items-center gap-2 mb-1">
+          <mat-icon class="text-green-600 text-sm">schedule</mat-icon>
+          <span class="text-sm text-gray-500 font-medium">Enviado:</span>
+        </div>
+        <p class="text-gray-900 font-semibold">{{ justification?.createdAt | date : 'dd/MM/yyyy HH:mm' }}</p>
+      </div>
     </div>
-    <div class="flex gap-3">
-      <strong class="min-w-[80px] text-gray-600">Enviado:</strong>
-      <span>{{ justification?.createdAt | date : 'dd/MM/yyyy HH:mm' }}</span>
-    </div>
-    <div class="flex gap-3">
-      <strong class="min-w-[80px] text-gray-600">Motivo:</strong>
-    </div>
-    <div class="bg-gray-100 p-4 rounded-md leading-relaxed">
-      {{ justification?.reason }}
+
+    <div class="space-y-3">
+      <div class="flex items-center gap-2">
+        <mat-icon class="text-purple-600">description</mat-icon>
+        <span class="text-sm text-gray-500 font-medium">Motivo:</span>
+      </div>
+      <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 p-5 rounded-xl">
+        <p class="text-gray-800 leading-relaxed">{{ justification?.reason }}</p>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="flex justify-end gap-2 px-6 py-4 border-t">
-  <button class="text-sm text-gray-600 hover:text-gray-800" (click)="dialogRef.close()">Cancelar</button>
-  <button class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 flex items-center gap-1" (click)="onReject()">
-    <mat-icon>close</mat-icon> Rechazar
+<div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+  <button
+    class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+    (click)="dialogRef.close()">
+    Cancelar
   </button>
-  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1" (click)="onApprove()">
-    <mat-icon>check</mat-icon> Aprobar
+
+  <button
+    class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-5 py-2 rounded-lg flex items-center gap-2 transition-all duration-200 hover:shadow-lg"
+    (click)="onReject()">
+    <mat-icon class="text-lg">close</mat-icon>
+    Rechazar
+  </button>
+
+  <button
+    class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-5 py-2 rounded-lg flex items-center gap-2 transition-all duration-200 hover:shadow-lg"
+    (click)="onApprove()">
+    <mat-icon class="text-lg">check</mat-icon>
+    Aprobar
   </button>
 </div>

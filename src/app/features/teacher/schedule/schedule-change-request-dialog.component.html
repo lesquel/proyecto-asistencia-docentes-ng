@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>Solicitar Cambio de Horario</h2>
+<mat-dialog-content class="p-5">
+    <div class="bg-gray-100 p-4 rounded-lg mb-5">
+        <h4 class="text-base font-semibold text-gray-800 mb-2">Horario Actual:</h4>
+        <p class="text-gray-700 font-medium mb-1">
+            <strong>{{ schedule?.subject }}</strong>
+        </p>
+        <p class="text-gray-600 mb-1">
+            {{ getDayName(schedule?.dayOfWeek || 0) }} -
+            {{ schedule?.startTime }} a {{ schedule?.endTime }}
+        </p>
+        <p class="text-gray-600">Aula: {{ schedule?.classroom }}</p>
+    </div>
+    <form [formGroup]="requestForm" class="flex flex-col min-w-96">
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Fecha del cambio</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Seleccionar fecha" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="requestForm.get('date')?.hasError('required')">
+                La fecha es requerida
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Tipo de solicitud</mat-label>
+            <mat-select formControlName="requestType">
+                <mat-option value="cancel">Cancelar clase</mat-option>
+                <mat-option value="reschedule">Reprogramar clase</mat-option>
+                <mat-option value="substitute">Solicitar suplente</mat-option>
+            </mat-select>
+            <mat-error *ngIf="requestForm.get('requestType')?.hasError('required')">
+                El tipo de solicitud es requerido
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Motivo de la solicitud</mat-label>
+            <textarea matInput formControlName="reason" placeholder="Describa el motivo del cambio" rows="4"></textarea>
+            <mat-error *ngIf="requestForm.get('reason')?.hasError('required')">
+                El motivo es requerido
+            </mat-error>
+            <mat-error *ngIf="requestForm.get('reason')?.hasError('minlength')">
+                El motivo debe tener al menos 10 caracteres
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="requestForm.invalid">
+        Enviar Solicitud
+    </button>
+</mat-dialog-actions>

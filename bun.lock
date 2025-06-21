@@ -4,6 +4,7 @@
     "": {
       "name": "proyecto-asistencia-docentes-ng",
       "dependencies": {
+        "@angular/cdk": "^20.0.2",
         "@angular/common": "^20.0.0",
         "@angular/compiler": "^20.0.0",
         "@angular/core": "^20.0.0",

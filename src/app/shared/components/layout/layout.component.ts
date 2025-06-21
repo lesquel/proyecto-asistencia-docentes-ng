@@ -26,6 +26,35 @@ export interface MenuItem {
     RouterModule,
   ],
   templateUrl: './layout.component.html',
+  styles: [
+    `
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+
+      /* Smooth scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #6366f1, #8b5cf6);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(45deg, #4f46e5, #7c3aed);
+      }
+    `,
+  ],
 })
 export class LayoutComponent {
   title = input('Sistema de Asistencia');

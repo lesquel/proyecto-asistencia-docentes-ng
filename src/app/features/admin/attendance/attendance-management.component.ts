@@ -20,6 +20,7 @@ import { TeacherService } from '../../../core/services/teacher.service';
 import { AttendanceService } from '../../../core/services/attendance.service';
 import type { AttendanceJustification } from '../../../core/models/user.model';
 import { JustificationReviewDialogComponent } from './justification-review-dialog.component';
+import { AttendanceRecordTabComponent } from './attendance-record-tab.component';
 
 @Component({
   selector: 'app-attendance-management',
@@ -38,6 +39,7 @@ import { JustificationReviewDialogComponent } from './justification-review-dialo
     MatSelectModule,
     MatTabsModule,
     LayoutComponent,
+    AttendanceRecordTabComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './attendance-management.component.html',

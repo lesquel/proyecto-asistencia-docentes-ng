@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +29,43 @@ import { AuthService } from '../../../core/services/auth.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
+  styles: [
+    `
+      .animation-delay-2000 {
+        animation-delay: 2s;
+      }
+
+      .animation-delay-4000 {
+        animation-delay: 4s;
+      }
+
+      /* Custom input autofill styles */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset !important;
+        -webkit-text-fill-color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      }
+
+      /* Smooth transitions for all interactive elements */
+      * {
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Enhanced focus styles */
+      input:focus {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Button ripple effect */
+      button:active {
+        transform: scale(0.98);
+      }
+    `,
+  ],
 })
 export class LoginComponent {
   loading = signal(false);

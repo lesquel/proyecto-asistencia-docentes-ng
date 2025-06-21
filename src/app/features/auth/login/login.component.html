@@ -1,66 +1,154 @@
-<div class="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-semibold text-gray-800">Sistema de Asistencia Docente</h1>
-            <p class="text-sm text-gray-500">Iniciar Sesión</p>
+<div
+    class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-20">
+        <div
+            class="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse">
+        </div>
+        <div
+            class="absolute top-0 -right-4 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000">
+        </div>
+        <div
+            class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000">
+        </div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="relative w-full max-w-md">
+        <!-- Main Login Card -->
+        <div
+            class="bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-8 relative overflow-hidden">
+            <!-- Card Background Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-3xl"></div>
+
+            <!-- Header Section -->
+            <div class="relative z-10">
+                <div class="text-center mb-8">
+                    <!-- Logo/Icon -->
+                    <div
+                        class="mx-auto w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                        <mat-icon class="text-white text-3xl">school</mat-icon>
+                    </div>
+
+                    <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">
+                        Bienvenido
+                    </h1>
+                    <p class="text-purple-200 text-lg">Sistema de Asistencia Docente</p>
+                    <div class="w-12 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mx-auto mt-3"></div>
+                </div>
+
+                <!-- Login Form -->
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                    <!-- Email Field -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-purple-200 pl-1">
+                            Correo Electrónico
+                        </label>
+                        <div class="relative group">
+                            <input type="email" formControlName="email" placeholder="usuario@escuela.com"
+                                class="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-4 py-4 pr-12 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 group-hover:bg-white/15" />
+                            <div class="absolute inset-y-0 right-4 flex items-center">
+                                <mat-icon
+                                    class="text-purple-300 group-hover:text-purple-200 transition-colors">alternate_email</mat-icon>
+                            </div>
+                        </div>
+                        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                            class="text-red-300 text-sm pl-1 flex items-center space-x-1">
+                            <mat-icon class="text-xs">error</mat-icon>
+                            <span *ngIf="loginForm.get('email')?.hasError('required')">El correo es requerido</span>
+                            <span *ngIf="loginForm.get('email')?.hasError('email')">Ingrese un correo válido</span>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-purple-200 pl-1">
+                            Contraseña
+                        </label>
+                        <div class="relative group">
+                            <input [type]="hidePassword() ? 'password' : 'text'" formControlName="password"
+                                placeholder="Contraseña"
+                                class="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-4 py-4 pr-12 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-300 group-hover:bg-white/15" />
+                            <button type="button" (click)="togglePasswordVisibility()"
+                                class="absolute inset-y-0 right-4 flex items-center hover:scale-110 transition-transform duration-200">
+                                <mat-icon class="text-purple-300 hover:text-purple-200 transition-colors">
+                                    {{ hidePassword() ? 'visibility' : 'visibility_off' }}
+                                </mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                            class="text-red-300 text-sm pl-1 flex items-center space-x-1">
+                            <mat-icon class="text-xs">error</mat-icon>
+                            <span *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es
+                                requerida</span>
+                            <span *ngIf="loginForm.get('password')?.hasError('minlength')">Mínimo 6 caracteres</span>
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div *ngIf="errorMessage()"
+                        class="bg-red-500/20 border border-red-400/30 rounded-2xl p-4 text-red-200 text-sm text-center backdrop-blur-sm">
+                        <div class="flex items-center justify-center space-x-2">
+                            <mat-icon class="text-red-300">warning</mat-icon>
+                            <span>{{ errorMessage() }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" [disabled]="loginForm.invalid || loading()"
+                        class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-bold py-4 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+
+                        <div class="flex items-center justify-center space-x-2">
+                            <svg *ngIf="loading()" class="animate-spin h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                            </svg>
+                            <span *ngIf="loading()">Iniciando sesión...</span>
+                            <span *ngIf="!loading()">Iniciar Sesión</span>
+                            <mat-icon *ngIf="!loading()" class="ml-2">arrow_forward</mat-icon>
+                        </div>
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
-                <div class="relative">
-                    <input type="email" formControlName="email" placeholder="usuario@escuela.com"
-                        class="w-full border border-gray-300 rounded px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    <span class="absolute inset-y-0 right-3 flex items-center text-gray-400">
-                        <mat-icon>alternate_email</mat-icon>
-                    </span>
+        <!-- Credentials Card -->
+        <div class="mt-6 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-lg">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <mat-icon class="text-purple-300">info</mat-icon>
+                    <h4 class="font-semibold text-purple-200">Credenciales de Prueba</h4>
                 </div>
-                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-                    class="text-red-500 text-sm mt-1">
-                    <div *ngIf="loginForm.get('email')?.hasError('required')">El correo es requerido</div>
-                    <div *ngIf="loginForm.get('email')?.hasError('email')">Ingrese un correo válido</div>
-                </div>
-            </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                <div class="relative">
-                    <input [type]="hidePassword() ? 'password' : 'text'" formControlName="password"
-                        placeholder="Contraseña"
-                        class="w-full border border-gray-300 rounded px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    <button type="button" (click)="togglePasswordVisibility()"
-                        class="absolute inset-y-0 right-3 flex items-center text-gray-400">
-                        <mat-icon *ngIf="hidePassword()">visibility</mat-icon>
-                        <mat-icon *ngIf="!hidePassword()">visibility_off</mat-icon>
-                    </button>
-                </div>
-                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-                    class="text-red-500 text-sm mt-1">
-                    <div *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida</div>
-                    <div *ngIf="loginForm.get('password')?.hasError('minlength')">La contraseña debe tener al menos 6
-                        caracteres</div>
+                <div class="space-y-3 text-sm">
+                    <!-- Admin Credentials -->
+                    <div class="bg-white/5 rounded-xl p-3 border border-purple-500/20">
+                        <div class="flex items-center justify-center space-x-2 mb-2">
+                            <mat-icon class="text-purple-400 text-sm">admin_panel_settings</mat-icon>
+                            <span class="font-medium text-purple-200">Administrador</span>
+                        </div>
+                        <div class="text-purple-300 space-y-1">
+                            <p><span class="font-mono bg-white/10 px-2 py-1 rounded">admin&commat;school.com</span></p>
+                            <p><span class="font-mono bg-white/10 px-2 py-1 rounded">123456</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Credentials -->
+                    <div class="bg-white/5 rounded-xl p-3 border border-pink-500/20">
+                        <div class="flex items-center justify-center space-x-2 mb-2">
+                            <mat-icon class="text-pink-400 text-sm">person</mat-icon>
+                            <span class="font-medium text-pink-200">Docente</span>
+                        </div>
+                        <div class="text-pink-300 space-y-1">
+                            <p><span class="font-mono bg-white/10 px-2 py-1 rounded">teacher1&commat;school.com</span></p>
+                            <p><span class="font-mono bg-white/10 px-2 py-1 rounded">123456</span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div *ngIf="errorMessage()" class="text-red-600 text-sm text-center mb-4">
-                {{ errorMessage() }}
-            </div>
-
-            <button type="submit" [disabled]="loginForm.invalid || loading()"
-                class="w-full flex justify-center items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded transition duration-200">
-                <svg *ngIf="loading()" class="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                </svg>
-                <span *ngIf="!loading()">Iniciar Sesión</span>
-            </button>
-        </form>
-
-        <div class="mt-6 text-center bg-gray-100 rounded p-4 text-sm text-gray-600">
-            <h4 class="font-medium mb-2">Credenciales de Prueba:</h4>
-            <p><strong>Administrador:</strong> admin&#64;school.com / 123456</p>
-            <p><strong>Docente:</strong> teacher1&#64;school.com / 123456</p>
         </div>
     </div>
 </div>
+    
