@@ -57,3 +57,18 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+# Start development server
+npm run start
+
+# Build for production
+npm run build
+
+# Run tests
+npm run test
+
+# Build and watch for changes
+npm run watch
+
+# Serve SSR build
+npm run serve:ssr:proyecto-asistencia-docentes-ng
