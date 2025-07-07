@@ -1,16 +1,18 @@
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Schedule } from '../../../core/models/user.model';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AttendanceService } from '../../../core/services/attendance.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { AttendanceService } from '../../../core/services/attendance.service';
+import type { Schedule } from '../../../core/models/user.model';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-schedule-change-request-dialog',
@@ -25,6 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
+    MatIcon,
   ],
   templateUrl: './schedule-change-request-dialog.component.html',
   styles: [
@@ -69,7 +72,6 @@ export class ScheduleChangeRequestDialogComponent {
   private fb: FormBuilder = inject(FormBuilder);
   private attendanceService: AttendanceService = inject(AttendanceService);
   private snackBar: MatSnackBar = inject(MatSnackBar);
-
   requestForm = this.fb.group({
     date: ['', Validators.required],
     requestType: ['', Validators.required],

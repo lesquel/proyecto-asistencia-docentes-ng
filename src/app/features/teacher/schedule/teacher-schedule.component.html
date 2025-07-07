@@ -1,206 +1,237 @@
 <app-layout [title]="'Mis Horarios'" [menuItems]="menuItems">
-    <div class="max-w-[1200px] mx-auto">
+    <div class="max-w-screen-2xl mx-auto p-4 space-y-6">
         <!-- Vista de horarios semanales -->
-        <mat-card class="mb-6">
-            <mat-card-header>
-                <mat-card-title>Horarios Semanales</mat-card-title>
-                <mat-card-subtitle>Vista general de todos tus horarios - Registra tu asistencia aquí</mat-card-subtitle>
-            </mat-card-header>
+        <div class="bg-white shadow-xl rounded-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-white">
+                <h2 class="text-xl font-bold flex items-center">
+                    <mat-icon class="mr-2">calendar_view_week</mat-icon>
+                    Horarios Semanales
+                </h2>
+                <p class="text-blue-100 text-sm mt-1">Vista general de todos tus horarios - Registra tu asistencia aquí</p>
+            </div>
 
-            <mat-card-content>
-                <div class="grid grid-cols-1 md:grid-cols-7 gap-4 mb-5">
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
                     <div *ngFor="let day of weekDays" class="min-h-[200px]">
-                        <h3 class="text-center m-0 mb-3 py-2 bg-gray-100 rounded text-sm font-medium text-gray-800"
-                            [class.bg-blue-500]="isToday(day.value)" [class.text-white]="isToday(day.value)">
+                        <div class="text-center mb-3 py-2 rounded-lg font-medium text-gray-800 transition-colors duration-200"
+                            [ngClass]="{
+                                'bg-blue-600 text-white shadow-md': isToday(day.value),
+                                'bg-gray-100': !isToday(day.value)
+                            }">
                             {{ day.name }}
-                        </h3>
-                        <div class="flex flex-col gap-2">
+                            <span *ngIf="isToday(day.value)" class="ml-2 text-blue-200 text-xs">(HOY)</span>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3">
                             <div *ngFor="let schedule of getSchedulesForDay(day.value)"
-                                class="bg-white border border-gray-200 rounded-lg p-3 transition-all duration-200 hover:shadow-md hover:-translate-y-[1px]"
-                                [class.border-blue-500]="isToday(day.value)" [class.bg-blue-50]="isToday(day.value)">
-                                <div>
-                                    <h4 class="m-0 mb-2 text-sm text-gray-800">{{ schedule.subject }}</h4>
-                                    <p class="m-1 text-xs text-gray-600 flex items-center gap-1">
-                                        <mat-icon class="!text-sm !w-[14px] !h-[14px]">access_time</mat-icon>
+                                class="bg-white border rounded-lg p-4 transition-all duration-300 hover:shadow-md"
+                                [ngClass]="{
+                                    'border-blue-500 shadow-sm': isToday(day.value),
+                                    'border-gray-200': !isToday(day.value)
+                                }">
+                                
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="m-0 text-sm font-semibold text-gray-800">{{ schedule.subject }}</h4>
+                                    <span class="text-xs px-2 py-1 rounded-full"
+                                        [ngClass]="{
+                                            'bg-blue-100 text-blue-800': isToday(day.value),
+                                            'bg-gray-100 text-gray-600': !isToday(day.value)
+                                        }">
+                                    </span>
+                                </div>
+                                
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <mat-icon class="text-gray-500 mr-2 !text-base">access_time</mat-icon>
                                         {{ schedule.startTime }} - {{ schedule.endTime }}
-                                    </p>
-                                    <p class="m-1 text-xs text-gray-600 flex items-center gap-1">
-                                        <mat-icon class="!text-sm !w-[14px] !h-[14px]">room</mat-icon>
+                                    </div>
+                                    
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <mat-icon class="text-gray-500 mr-2 !text-base">room</mat-icon>
                                         {{ schedule.classroom }}
-                                    </p>
-
+                                    </div>
+                                    
                                     <!-- Estado de asistencia -->
-                                    <div class="mt-2" *ngIf="getAttendanceStatusForSchedule(schedule) as status">
-                                        <mat-chip [color]="status.color" selected>
-                                            <mat-icon class="!text-sm !w-[14px] !h-[14px]">{{ status.icon }}</mat-icon>
+                                    <div class="mt-3" *ngIf="getAttendanceStatusForSchedule(schedule) as status">
+                                        <mat-chip [color]="status.color" selected class="!text-xs !py-1 !px-2">
+                                            <mat-icon class="!text-sm mr-1">{{ status.icon }}</mat-icon>
                                             {{ status.text }}
                                         </mat-chip>
                                     </div>
-
-                                    <!-- Botón de registro de asistencia -->
-                                    <div class="mt-2" *ngIf="isToday(schedule.dayOfWeek)">
-                                        <button mat-raised-button color="primary" size="small"
+                                    
+                                    <!-- Botón de registro -->
+                                    <div class="mt-3" *ngIf="isToday(schedule.dayOfWeek)">
+                                        <button mat-raised-button 
+                                            [color]="isAttendanceRegistered(schedule) ? 'accent' : 'primary'" 
                                             (click)="registerAttendance(schedule)"
-                                            [disabled]="isAttendanceRegistered(schedule)" class="w-full h-8 text-xs">
-                                            <mat-icon>{{
-                                                isAttendanceRegistered(schedule)
-                                                ? 'check_circle'
-                                                : 'how_to_reg'
-                                                }}</mat-icon>
-                                            {{
-                                            isAttendanceRegistered(schedule)
-                                            ? 'Registrado'
-                                            : 'Registrar'
-                                            }}
+                                            [disabled]="isAttendanceRegistered(schedule)" 
+                                            class="w-full !text-xs !py-1 !px-2">
+                                            <mat-icon class="!text-base mr-1">
+                                                {{ isAttendanceRegistered(schedule) ? 'check_circle' : 'how_to_reg' }}
+                                            </mat-icon>
+                                            {{ isAttendanceRegistered(schedule) ? 'Asistencia Registrada' : 'Registrar Asistencia' }}
                                         </button>
                                     </div>
-
-                                    <!-- Acciones adicionales -->
-                                    <div class="flex justify-between mt-2">
-                                        <button mat-icon-button color="accent" (click)="viewScheduleDetails(schedule)"
-                                            matTooltip="Ver detalles">
-                                            <mat-icon class="!text-base !w-4 !h-4">info</mat-icon>
+                                    
+                                    <!-- Acciones -->
+                                    <div class="flex justify-end gap-1 mt-3">
+                                        <button mat-mini-fab color="primary" (click)="viewScheduleDetails(schedule)"
+                                            matTooltip="Detalles" class="!w-8 !h-8">
+                                            <mat-icon class="!text-base">info</mat-icon>
                                         </button>
-                                        <button mat-icon-button color="primary"
-                                            (click)="requestScheduleChange(schedule)" matTooltip="Solicitar cambio">
-                                            <mat-icon class="!text-base !w-4 !h-4">edit_calendar</mat-icon>
+                                        <button mat-mini-fab color="accent" (click)="requestScheduleChange(schedule)"
+                                            matTooltip="Solicitar cambio" class="!w-8 !h-8">
+                                            <mat-icon class="!text-base">edit_calendar</mat-icon>
                                         </button>
                                     </div>
                                 </div>
                             </div>
+                            
                             <div *ngIf="getSchedulesForDay(day.value).length === 0"
-                                class="flex flex-col items-center py-5 text-gray-500 text-xs">
-                                <mat-icon class="!text-2xl !w-6 !h-6 mb-1">event_available</mat-icon>
-                                <span>Sin clases</span>
+                                class="flex flex-col items-center justify-center py-6 text-gray-400 rounded-lg border border-dashed border-gray-300">
+                                <mat-icon class="!text-3xl mb-2">event_available</mat-icon>
+                                <span class="text-xs">Sin clases programadas</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </mat-card-content>
-        </mat-card>
+            </div>
+        </div>
 
         <!-- Lista detallada de horarios -->
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>Lista Detallada de Horarios</mat-card-title>
-                <mat-card-subtitle>Todos tus horarios con opciones de gestión</mat-card-subtitle>
-            </mat-card-header>
+        <div class="bg-white shadow-xl rounded-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-white">
+                <h2 class="text-xl font-bold flex items-center">
+                    <mat-icon class="mr-2">list_alt</mat-icon>
+                    Lista Detallada de Horarios
+                </h2>
+                <p class="text-blue-100 text-sm mt-1">Todos tus horarios con opciones de gestión</p>
+            </div>
 
-            <mat-card-content>
+            <div class="p-6">
                 <div class="overflow-x-auto">
-                    <table mat-table [dataSource]="teacherSchedules()" class="w-full">
+                    <table mat-table [dataSource]="teacherSchedules()" class="w-full custom-mat-table">
+                        <!-- Día Columna -->
                         <ng-container matColumnDef="day">
-                            <th mat-header-cell *matHeaderCellDef>Día</th>
-                            <td mat-cell *matCellDef="let schedule">
-                                <mat-chip [color]="
-                    isToday(schedule.dayOfWeek) ? 'primary' : 'basic'
-                " [selected]="isToday(schedule.dayOfWeek)">
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Día</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
+                                <mat-chip [color]="isToday(schedule.dayOfWeek) ? 'primary' : undefined" 
+                                          [selected]="isToday(schedule.dayOfWeek)"
+                                          class="!text-xs">
                                     {{ getDayName(schedule.dayOfWeek) }}
+                                    <span *ngIf="isToday(schedule.dayOfWeek)" class="ml-1">(HOY)</span>
                                 </mat-chip>
                             </td>
                         </ng-container>
 
+                        <!-- Materia Columna -->
                         <ng-container matColumnDef="subject">
-                            <th mat-header-cell *matHeaderCellDef>Materia</th>
-                            <td mat-cell *matCellDef="let schedule">
-                                <strong>{{ schedule.subject }}</strong>
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Materia</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
+                                <div class="font-medium text-gray-800">{{ schedule.subject }}</div>
+                                <div class="text-xs text-gray-500 mt-1">{{ schedule.group }}</div>
                             </td>
                         </ng-container>
 
+                        <!-- Horario Columna -->
                         <ng-container matColumnDef="time">
-                            <th mat-header-cell *matHeaderCellDef>Horario</th>
-                            <td mat-cell *matCellDef="let schedule">
-                                <div class="flex items-center gap-2">
-                                    <mat-icon class="!text-base !w-4 !h-4 text-gray-600">access_time</mat-icon>
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Horario</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
+                                <div class="flex items-center text-gray-700">
+                                    <mat-icon class="!text-gray-500 mr-2 !text-base">access_time</mat-icon>
                                     {{ schedule.startTime }} - {{ schedule.endTime }}
                                 </div>
                             </td>
                         </ng-container>
 
+                        <!-- Aula Columna -->
                         <ng-container matColumnDef="classroom">
-                            <th mat-header-cell *matHeaderCellDef>Aula</th>
-                            <td mat-cell *matCellDef="let schedule">
-                                <div class="flex items-center gap-2">
-                                    <mat-icon class="!text-base !w-4 !h-4 text-gray-600">room</mat-icon>
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Aula</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
+                                <div class="flex items-center text-gray-700">
+                                    <mat-icon class="!text-gray-500 mr-2 !text-base">room</mat-icon>
                                     {{ schedule.classroom }}
                                 </div>
                             </td>
                         </ng-container>
 
+                        <!-- Asistencias Columna -->
                         <ng-container matColumnDef="attendance">
-                            <th mat-header-cell *matHeaderCellDef>Asistencias</th>
-                            <td mat-cell *matCellDef="let schedule">
-                                <div class="flex flex-col gap-1">
-                                    <span class="text-xs text-gray-600">{{ getAttendanceCount(schedule.id) }}
-                                        registros</span>
-                                    <mat-chip color="primary" selected *ngIf="
-                      isAttendanceRegistered(schedule) &&
-                      isToday(schedule.dayOfWeek)
-                      ">
-                                        Hoy: Presente
-                                    </mat-chip>
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Asistencias</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-700">
+                                        {{ getAttendanceCount(schedule.id) }} registros
+                                    </span>
+                                    <div *ngIf="isToday(schedule.dayOfWeek) && isAttendanceRegistered(schedule)" class="mt-1">
+                                        <mat-chip color="primary" selected class="!text-xs !py-1">
+                                            <mat-icon class="!text-sm mr-1">check_circle</mat-icon>
+                                            Presente hoy
+                                        </mat-chip>
+                                    </div>
                                 </div>
                             </td>
                         </ng-container>
 
+                        <!-- Registrar Columna -->
                         <ng-container matColumnDef="register">
-                            <th mat-header-cell *matHeaderCellDef>Registrar Hoy</th>
-                            <td mat-cell *matCellDef="let schedule">
-                                <button mat-raised-button color="primary" size="small"
-                                    (click)="registerAttendance(schedule)" [disabled]="
-                        !isToday(schedule.dayOfWeek) ||
-                        isAttendanceRegistered(schedule)
-                    " *ngIf="isToday(schedule.dayOfWeek)">
-                                    <mat-icon>{{
-                                        isAttendanceRegistered(schedule)
-                                        ? 'check_circle'
-                                        : 'how_to_reg'
-                                        }}</mat-icon>
-                                    {{
-                                    isAttendanceRegistered(schedule)
-                                    ? 'Registrado'
-                                    : 'Registrar'
-                                    }}
-                                </button>
-                                <div *ngIf="getAttendanceStatusForSchedule(schedule) as status" class="mt-2">
-                                    <mat-chip [color]="status.color" selected>
-                                        <mat-icon class="!text-sm !w-[14px] !h-[14px]">{{ status.icon }}</mat-icon>
-                                        {{ status.text }}
-                                    </mat-chip>
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Registrar Hoy</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
+                                <div class="flex flex-col items-start">
+                                    <button mat-raised-button 
+                                            [color]="isAttendanceRegistered(schedule) ? 'accent' : 'primary'" 
+                                            (click)="registerAttendance(schedule)"
+                                            [disabled]="!isToday(schedule.dayOfWeek) || isAttendanceRegistered(schedule)"
+                                            class="!text-xs !py-1 !px-3">
+                                        <mat-icon class="!text-base mr-1">
+                                            {{ isAttendanceRegistered(schedule) ? 'check_circle' : 'how_to_reg' }}
+                                        </mat-icon>
+                                        {{ isAttendanceRegistered(schedule) ? 'Registrado' : 'Registrar' }}
+                                    </button>
+                                    <div *ngIf="getAttendanceStatusForSchedule(schedule) as status" class="mt-2">
+                                        <mat-chip [color]="status.color" selected class="!text-xs !py-1">
+                                            <mat-icon class="!text-sm mr-1">{{ status.icon }}</mat-icon>
+                                            {{ status.text }}
+                                        </mat-chip>
+                                    </div>
+                                    <span *ngIf="!isToday(schedule.dayOfWeek)" class="text-xs text-gray-500 mt-1">
+                                        No corresponde al día de hoy
+                                    </span>
                                 </div>
-                                <span *ngIf="!isToday(schedule.dayOfWeek)" class="text-xs text-gray-500">
-                                    No es hoy
-                                </span>
                             </td>
                         </ng-container>
 
+                        <!-- Acciones Columna -->
                         <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                            <td mat-cell *matCellDef="let schedule">
+                            <th mat-header-cell *matHeaderCellDef class="!font-semibold !text-gray-700">Acciones</th>
+                            <td mat-cell *matCellDef="let schedule" class="!py-3">
                                 <div class="flex gap-1">
-                                    <button mat-icon-button color="primary" (click)="requestScheduleChange(schedule)"
-                                        matTooltip="Solicitar cambio">
-                                        <mat-icon class="!text-base !w-4 !h-4">edit_calendar</mat-icon>
+                                    <button mat-mini-fab color="primary" (click)="viewScheduleDetails(schedule)"
+                                        matTooltip="Ver detalles" class="!w-8 !h-8">
+                                        <mat-icon class="!text-base">info</mat-icon>
                                     </button>
-                                    <button mat-icon-button color="accent" (click)="viewScheduleDetails(schedule)"
-                                        matTooltip="Ver detalles">
-                                        <mat-icon class="!text-base !w-4 !h-4">info</mat-icon>
+                                    <button mat-mini-fab color="accent" (click)="requestScheduleChange(schedule)"
+                                        matTooltip="Solicitar cambio" class="!w-8 !h-8">
+                                        <mat-icon class="!text-base">edit_calendar</mat-icon>
                                     </button>
                                 </div>
                             </td>
                         </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="!h-12"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns" 
+                            class="hover:bg-gray-50 transition-colors duration-200"></tr>
                     </table>
 
-                    <div *ngIf="teacherSchedules().length === 0" class="text-center py-10 px-5 text-gray-600">
-                        <mat-icon class="!text-[48px] !w-12 !h-12 mb-4">schedule</mat-icon>
-                        <p>No tienes horarios asignados</p>
-                        <p>Contacta al administrador para que te asigne horarios</p>
+                    <div *ngIf="teacherSchedules().length === 0" class="text-center py-12 px-5">
+                        <div class="mx-auto w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                            <mat-icon class="!text-3xl text-blue-500">schedule</mat-icon>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800 mb-1">No tienes horarios asignados</h3>
+                        <p class="text-gray-600 text-sm">Contacta al administrador para que te asigne horarios</p>
                     </div>
                 </div>
-            </mat-card-content>
-        </mat-card>
+            </div>
+        </div>
     </div>
 </app-layout>

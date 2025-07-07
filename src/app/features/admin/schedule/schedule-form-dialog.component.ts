@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Schedule } from '../../../core/models/user.model';
 import { TeacherService } from '../../../core/services/teacher.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-schedule-form-dialog',
@@ -24,6 +21,7 @@ import { TeacherService } from '../../../core/services/teacher.service';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    MatIcon,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './schedule-form-dialog.component.html',
@@ -71,11 +69,17 @@ export class ScheduleFormDialogComponent {
         formValue.classroom
       ) {
         if (this.schedule) {
-          const teacher = this.teacherService.getTeacherById(formValue.teacherId);
+          const teacher = this.teacherService.getTeacherById(
+            formValue.teacherId
+          );
           if (teacher) {
             const updatedSchedules = teacher.schedules.map((s) =>
               s.id === this.schedule!.id
-                ? { ...s, ...formValue, teacherId: formValue.teacherId as string }
+                ? {
+                    ...s,
+                    ...formValue,
+                    teacherId: formValue.teacherId as string,
+                  }
                 : s
             );
             this.teacherService.updateTeacher(teacher.id, {

@@ -1,89 +1,184 @@
 <app-layout [title]="'Mis Asistencias'" [menuItems]="menuItems">
     <div class="max-w-screen-xl mx-auto p-4">
-        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
-            <div class="border-b px-6 py-4">
-                <h2 class="text-xl font-semibold">Registro de Asistencias</h2>
-                <p class="text-sm text-gray-600">Historial de asistencias y horarios</p>
+        <div class="bg-white shadow-lg rounded-xl overflow-hidden mb-6">
+            <!-- Header mejorado -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-6 text-white">
+                <h2 class="text-2xl font-bold">Registro de Asistencias</h2>
+                <p class="text-blue-100 mt-1">Historial de asistencias y horarios</p>
             </div>
 
-            <div class="px-6 py-4 space-y-4">
-                <!-- Filtros -->
-                <div class="flex flex-wrap items-center gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Filtrar por fecha</label>
-                        <input type="date" (change)="onDateChange($event)"
-                            class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+            <div class="px-6 py-6 space-y-6">
+                <!-- Filtros mejorados -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex-1 min-w-48">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <mat-icon class="inline-block w-4 h-4 mr-1">date_range</mat-icon>
+                                Filtrar por fecha
+                            </label>
+                            <input type="date" (change)="onDateChange($event)"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200" />
+                        </div>
+                        <div class="flex items-end">
+                            <button (click)="clearDateFilter()"
+                                class="inline-flex items-center px-4 py-2 bg-red-50 text-red-600 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors duration-200">
+                                <mat-icon class="h-4 w-4 mr-1">clear</mat-icon>
+                                Limpiar Filtro
+                            </button>
+                        </div>
                     </div>
-                    <button (click)="clearDateFilter()"
-                        class="flex items-center gap-1 text-sm text-red-600 hover:text-red-800">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Limpiar Filtro
-                    </button>
                 </div>
 
-                <!-- Tabla -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 border border-gray-300 text-sm text-left">
-                        <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
-                            <tr>
-                                <th class="px-4 py-2">Fecha</th>
-                                <th class="px-4 py-2">Materia</th>
-                                <th class="px-4 py-2">Horario</th>
-                                <th class="px-4 py-2">Entrada</th>
-                                <th class="px-4 py-2">Salida</th>
-                                <th class="px-4 py-2">Estado</th>
-                                <th class="px-4 py-2">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let attendance of filteredAttendances()"
-                                class="odd:bg-white even:bg-gray-50 hover:bg-blue-50">
-                                <td class="px-4 py-2">{{ attendance.date | date: 'dd/MM/yyyy' }}</td>
-                                <td class="px-4 py-2">
-                                    {{ getScheduleInfo(attendance.scheduleId)?.subject || 'N/A' }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ getScheduleInfo(attendance.scheduleId)?.startTime }} -
-                                    {{ getScheduleInfo(attendance.scheduleId)?.endTime }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ attendance.checkIn ? (attendance.checkIn | date: 'HH:mm') : '-' }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ attendance.checkOut ? (attendance.checkOut | date: 'HH:mm') : '-' }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    <span [ngClass]="{
-                      'bg-green-100 text-green-800': getStatusColor(attendance.status) === 'primary',
-                      'bg-blue-100 text-blue-800': getStatusColor(attendance.status) === 'accent',
-                      'bg-red-100 text-red-800': getStatusColor(attendance.status) === 'warn'
-                    }" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                        {{ getStatusText(attendance.status) }}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <button *ngIf="canCheckOut(attendance)" (click)="checkOut(attendance)"
-                                        class="text-blue-600 hover:text-blue-800">
-                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M17 16l4-4m0 0l-4-4m4 4H7" />
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Tabla mejorada -->
+                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th
+                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center space-x-1">
+                                            <mat-icon class="w-4 h-4">calendar_today</mat-icon>
+                                            <span>Fecha</span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center space-x-1">
+                                            <mat-icon class="w-4 h-4">event</mat-icon>
+                                            <span>Materia</span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center space-x-1">
+                                            <mat-icon class="w-4 h-4">schedule</mat-icon>
+                                            <span>Horario</span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center space-x-1">
+                                            <mat-icon class="w-4 h-4 text-green-500">check_circle</mat-icon>
+                                            <span>Entrada</span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center space-x-1">
+                                            <mat-icon class="w-4 h-4 text-red-500">exit_to_app</mat-icon>
+                                            <span>Salida</span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center space-x-1">
+                                            <mat-icon class="w-4 h-4">check_circle</mat-icon>
+                                            <span>Estado</span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr *ngFor="let attendance of filteredAttendances(); let i = index"
+                                    class="hover:bg-blue-50 transition-colors duration-200"
+                                    [ngClass]="{'bg-blue-25': i % 2 === 0}">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <div
+                                                    class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                    <mat-icon class="h-5 w-5 text-blue-600">calendar_today</mat-icon>
+                                                </div>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    {{ attendance.date | date: 'dd/MM/yyyy' }}
+                                                </div>
+                                                <div class="text-sm text-gray-500">
+                                                    {{ attendance.date | date: 'EEEE' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ getScheduleInfo(attendance.scheduleId)?.subject || 'N/A' }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                {{ getScheduleInfo(attendance.scheduleId)?.startTime }} - {{
+                                                getScheduleInfo(attendance.scheduleId)?.endTime }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <mat-icon class="h-4 w-4 text-green-500 mr-1">check_circle</mat-icon>
+                                            <span class="text-sm text-gray-900 font-medium">
+                                                {{ attendance.checkIn ? (attendance.checkIn | date: 'HH:mm') : '-' }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <mat-icon class="h-4 w-4 text-red-500 mr-1">exit_to_app</mat-icon>
+                                            <span class="text-sm text-gray-900 font-medium">
+                                                {{ attendance.checkOut ? (attendance.checkOut | date: 'HH:mm') : '-' }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span [ngClass]="{
+                                            'bg-green-100 text-green-800 border-green-200': getStatusColor(attendance.status) === 'primary',
+                                            'bg-blue-100 text-blue-800 border-blue-200': getStatusColor(attendance.status) === 'accent',
+                                            'bg-red-100 text-red-800 border-red-200': getStatusColor(attendance.status) === 'warn'
+                                        }"
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 8 8">
+                                                <circle cx="4" cy="4" r="3" />
+                                            </svg>
+                                            {{ getStatusText(attendance.status) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <button *ngIf="canCheckOut(attendance)" (click)="checkOut(attendance)"
+                                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M17 16l4-4m0 0l-4-4m4 4H7" />
+                                            </svg>
+                                            Salir
+                                        </button>
+                                        <span *ngIf="!canCheckOut(attendance)" class="text-gray-400 text-sm">
+                                            No disponible
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                    <div *ngIf="filteredAttendances().length === 0" class="text-center text-gray-600 py-10">
-                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3M16 7V3M4 11h16M4 19h16" />
-                        </svg>
-                        <p>No se encontraron registros de asistencia</p>
+                    <!-- Estado vacío mejorado -->
+                    <div *ngIf="filteredAttendances().length === 0" class="text-center py-12">
+                        <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
+                            <mat-icon class="h-24 w-24">description</mat-icon>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No hay registros de asistencia</h3>
+                        <p class="text-gray-500 text-sm">No se encontraron registros para la fecha seleccionada</p>
+                        <button (click)="clearDateFilter()"
+                            class="mt-4 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                            <mat-icon class="h-4 w-4 mr-2">refresh</mat-icon>
+                            Ver todos los registros
+                        </button>
                     </div>
                 </div>
             </div>

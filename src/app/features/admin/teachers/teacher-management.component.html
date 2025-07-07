@@ -1,57 +1,119 @@
 <app-layout [title]="'Gestión de Docentes'" [menuItems]="menuItems">
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        <div class="bg-white shadow rounded-lg overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800">Lista de Docentes</h2>
-                <p class="text-sm text-gray-500">Gestionar información de docentes</p>
+    <div class="max-w-screen-2xl mx-auto p-4">
+        <div class="bg-white shadow-xl rounded-xl overflow-hidden">
+            <!-- Header Section -->
+            <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4 text-white">
+                <h2 class="text-xl font-bold flex items-center">
+                    <mat-icon class="mr-2">people_alt</mat-icon>
+                    Lista de Docentes
+                </h2>
+                <p class="text-indigo-100 text-sm mt-1">Gestionar información de docentes</p>
             </div>
 
-            <div class="px-6 py-4 flex justify-end">
+            <!-- Action Button -->
+            <div class="px-6 py-4 flex justify-end border-b border-gray-200">
                 <button (click)="openTeacherDialog()"
-                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 transition">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 4v16m8-8H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg>
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-sm">
+                    <mat-icon class="mr-2">person_add</mat-icon>
                     Agregar Docente
                 </button>
             </div>
 
+            <!-- Table Section -->
             <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left">
-                    <thead class="bg-gray-100 text-gray-700">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-2">ID Empleado</th>
-                            <th class="px-4 py-2">Nombre</th>
-                            <th class="px-4 py-2">Correo</th>
-                            <th class="px-4 py-2">Departamento</th>
-                            <th class="px-4 py-2">Horarios</th>
-                            <th class="px-4 py-2">Acciones</th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 !text-base">badge</mat-icon>
+                                    ID Empleado
+                                </div>
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 !text-base">person</mat-icon>
+                                    Nombre
+                                </div>
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 !text-base">email</mat-icon>
+                                    Correo
+                                </div>
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 !text-base">business</mat-icon>
+                                    Departamento
+                                </div>
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 !text-base">schedule</mat-icon>
+                                    Horarios
+                                </div>
+                            </th>
+                            <th scope="col"
+                                class="px-6 py-3 text-right text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Acciones
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let teacher of teacherService.teachers()" class="border-t hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ teacher.employeeId }}</td>
-                            <td class="px-4 py-2">{{ teacher.name }}</td>
-                            <td class="px-4 py-2">{{ teacher.email }}</td>
-                            <td class="px-4 py-2">{{ teacher.department }}</td>
-                            <td class="px-4 py-2">{{ teacher.schedules.length }}</td>
-                            <td class="px-4 py-2">
-                                <div class="flex space-x-2">
-                                    <button (click)="openTeacherDialog(teacher)"
-                                        class="text-blue-600 hover:text-blue-800" title="Editar">
-                                        ✏️
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr *ngFor="let teacher of teacherService.teachers()"
+                            class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ teacher.employeeId }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ teacher.name }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ teacher.email }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [ngClass]="{
+                                        'bg-green-100 text-green-800': teacher.department === 'Matemáticas',
+                                        'bg-blue-100 text-blue-800': teacher.department === 'Ciencias',
+                                        'bg-purple-100 text-purple-800': teacher.department === 'Humanidades',
+                                        'bg-yellow-100 text-yellow-800': teacher.department === 'Tecnología',
+                                        'bg-gray-100 text-gray-800': !['Matemáticas', 'Ciencias', 'Humanidades', 'Tecnología'].includes(teacher.department)
+                                    }">
+                                    {{ teacher.department }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 !text-base text-gray-400">schedule</mat-icon>
+                                    {{ teacher.schedules.length }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex justify-end space-x-2">
+                                    <button (click)="openTeacherDialog(teacher)" mat-icon-button color="primary"
+                                        matTooltip="Editar docente">
+                                        <mat-icon>edit</mat-icon>
                                     </button>
-                                    <button (click)="deleteTeacher(teacher)" class="text-red-600 hover:text-red-800"
-                                        title="Eliminar">
-                                        🗑️
+                                    <button (click)="deleteTeacher(teacher)" mat-icon-button color="warn"
+                                        matTooltip="Eliminar docente">
+                                        <mat-icon>delete</mat-icon>
                                     </button>
                                 </div>
                             </td>
                         </tr>
                         <tr *ngIf="teacherService.teachers().length === 0">
-                            <td colspan="6" class="px-4 py-4 text-center text-gray-500">
-                                No hay docentes registrados.
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center text-gray-400">
+                                    <mat-icon class="!text-4xl mb-2">people_outline</mat-icon>
+                                    <h4 class="text-lg font-medium text-gray-600">No hay docentes registrados</h4>
+                                    <p class="text-sm mt-1">Agrega nuevos docentes usando el botón superior</p>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

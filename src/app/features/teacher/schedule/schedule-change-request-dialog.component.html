@@ -1,52 +1,105 @@
-<h2 mat-dialog-title>Solicitar Cambio de Horario</h2>
-<mat-dialog-content class="p-5">
-    <div class="bg-gray-100 p-4 rounded-lg mb-5">
-        <h4 class="text-base font-semibold text-gray-800 mb-2">Horario Actual:</h4>
-        <p class="text-gray-700 font-medium mb-1">
-            <strong>{{ schedule?.subject }}</strong>
+<mat-dialog-content class="!p-0">
+  <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 text-white">
+    <h2 mat-dialog-title class="!text-xl !font-bold !mb-0 flex items-center">
+      <mat-icon class="mr-2">edit_calendar</mat-icon>
+      Solicitar Cambio de Horario
+    </h2>
+  </div>
+
+  <div class="p-6 space-y-6">
+    <!-- Sección de horario actual -->
+    <div class="current-schedule bg-blue-50 rounded-lg p-4 border border-blue-200">
+      <h4 class="!m-0 !mb-2 text-sm font-semibold text-blue-800 flex items-center">
+        <mat-icon class="!text-base mr-1">schedule</mat-icon>
+        Horario Actual
+      </h4>
+      <div class="space-y-1 text-sm">
+        <p class="!m-0 font-medium text-gray-800">
+          <mat-icon class="align-middle !text-base mr-1 text-gray-600">class</mat-icon>
+          {{ schedule?.subject }}
         </p>
-        <p class="text-gray-600 mb-1">
-            {{ getDayName(schedule?.dayOfWeek || 0) }} -
-            {{ schedule?.startTime }} a {{ schedule?.endTime }}
+        <p class="!m-0 text-gray-700">
+          <mat-icon class="align-middle !text-base mr-1 text-gray-600">calendar_today</mat-icon>
+          {{ getDayName(schedule?.dayOfWeek || 0) }} - {{ schedule?.startTime }} a {{ schedule?.endTime }}
         </p>
-        <p class="text-gray-600">Aula: {{ schedule?.classroom }}</p>
+        <p class="!m-0 text-gray-700">
+          <mat-icon class="align-middle !text-base mr-1 text-gray-600">room</mat-icon>
+          Aula: {{ schedule?.classroom }}
+        </p>
+      </div>
     </div>
-    <form [formGroup]="requestForm" class="flex flex-col min-w-96">
-        <mat-form-field appearance="outline" class="w-full mb-4">
-            <mat-label>Fecha del cambio</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Seleccionar fecha" />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="requestForm.get('date')?.hasError('required')">
-                La fecha es requerida
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-full mb-4">
-            <mat-label>Tipo de solicitud</mat-label>
-            <mat-select formControlName="requestType">
-                <mat-option value="cancel">Cancelar clase</mat-option>
-                <mat-option value="reschedule">Reprogramar clase</mat-option>
-                <mat-option value="substitute">Solicitar suplente</mat-option>
-            </mat-select>
-            <mat-error *ngIf="requestForm.get('requestType')?.hasError('required')">
-                El tipo de solicitud es requerido
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-full mb-4">
-            <mat-label>Motivo de la solicitud</mat-label>
-            <textarea matInput formControlName="reason" placeholder="Describa el motivo del cambio" rows="4"></textarea>
-            <mat-error *ngIf="requestForm.get('reason')?.hasError('required')">
-                El motivo es requerido
-            </mat-error>
-            <mat-error *ngIf="requestForm.get('reason')?.hasError('minlength')">
-                El motivo debe tener al menos 10 caracteres
-            </mat-error>
-        </mat-form-field>
+
+    <!-- Formulario -->
+    <form [formGroup]="requestForm" class="request-form space-y-4">
+      <!-- Fecha del cambio -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Fecha del cambio</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" placeholder="Seleccionar fecha">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-icon matPrefix class="!text-gray-500">event</mat-icon>
+        <mat-error *ngIf="requestForm.get('date')?.hasError('required')" class="flex items-center">
+          <mat-icon class="mr-1 !text-sm">error</mat-icon>
+          La fecha es requerida
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Tipo de solicitud -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Tipo de solicitud</mat-label>
+        <mat-select formControlName="requestType">
+          <mat-option value="cancel">
+            <div class="flex items-center">
+              <mat-icon class="mr-2 !text-base">cancel</mat-icon>
+              Cancelar clase
+            </div>
+          </mat-option>
+          <mat-option value="reschedule">
+            <div class="flex items-center">
+              <mat-icon class="mr-2 !text-base">update</mat-icon>
+              Reprogramar clase
+            </div>
+          </mat-option>
+          <mat-option value="substitute">
+            <div class="flex items-center">
+              <mat-icon class="mr-2 !text-base">person_search</mat-icon>
+              Solicitar suplente
+            </div>
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix class="!text-gray-500">list_alt</mat-icon>
+        <mat-error *ngIf="requestForm.get('requestType')?.hasError('required')" class="flex items-center">
+          <mat-icon class="mr-1 !text-sm">error</mat-icon>
+          El tipo de solicitud es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Motivo -->
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Motivo de la solicitud</mat-label>
+        <textarea matInput formControlName="reason" placeholder="Describa el motivo del cambio" rows="4"></textarea>
+        <mat-icon matPrefix class="!text-gray-500">notes</mat-icon>
+        <mat-error *ngIf="requestForm.get('reason')?.hasError('required')" class="flex items-center">
+          <mat-icon class="mr-1 !text-sm">error</mat-icon>
+          El motivo es requerido
+        </mat-error>
+        <mat-error *ngIf="requestForm.get('reason')?.hasError('minlength')" class="flex items-center">
+          <mat-icon class="mr-1 !text-sm">error</mat-icon>
+          El motivo debe tener al menos 10 caracteres
+        </mat-error>
+      </mat-form-field>
     </form>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="requestForm.invalid">
-        Enviar Solicitud
+  </div>
+
+  <mat-dialog-actions align="end" class="!px-6 !py-4 !bg-gray-50 border-t">
+    <button mat-button mat-dialog-close class="!text-gray-700 hover:!bg-gray-200">
+      <mat-icon class="mr-1">close</mat-icon>
+      Cancelar
     </button>
-</mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="requestForm.invalid"
+      class="!bg-blue-600 hover:!bg-blue-700">
+      <mat-icon class="mr-1">send</mat-icon>
+      Enviar Solicitud
+    </button>
+  </mat-dialog-actions>
+</mat-dialog-content>

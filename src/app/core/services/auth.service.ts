@@ -3,11 +3,13 @@ import { Router } from "@angular/router"
 import { isPlatformBrowser } from "@angular/common"
 import { PLATFORM_ID, Inject } from "@angular/core"
 import type { User, Teacher, Admin } from "../models/user.model"
+import { TeacherService } from "./teacher.service"
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
+  private teacherService = inject(TeacherService)
   private currentUserSignal = signal<User | null>(null)
 
   currentUser = this.currentUserSignal.asReadonly()
@@ -42,6 +44,7 @@ export class AuthService {
       // Simulate API call
       setTimeout(() => {
         const users = this.getMockUsers()
+        console.log("Users:", users)
         const user = users.find((u) => u.email === email)
 
         if (user && this.validatePassword(password)) {
@@ -87,28 +90,7 @@ export class AuthService {
         role: "admin",
         createdAt: new Date(),
       } as Admin,
-      {
-        id: "2",
-        email: "teacher1@school.com",
-        name: "María García",
-        role: "teacher",
-        employeeId: "T001",
-        department: "Matemáticas",
-        phone: "555-0101",
-        schedules: [],
-        createdAt: new Date(),
-      } as Teacher,
-      {
-        id: "3",
-        email: "teacher2@school.com",
-        name: "Juan Pérez",
-        role: "teacher",
-        employeeId: "T002",
-        department: "Historia",
-        phone: "555-0102",
-        schedules: [],
-        createdAt: new Date(),
-      } as Teacher,
+      ...this.teacherService.teachers(),
     ]
   }
 }

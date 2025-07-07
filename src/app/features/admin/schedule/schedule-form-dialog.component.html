@@ -1,89 +1,130 @@
-<div class="p-6 w-full max-w-lg">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">
-        {{ schedule ? 'Editar' : 'Agregar' }} Horario
+<div class="w-full max-w-lg p-8 bg-white rounded-xl shadow-lg border border-gray-100">
+  <!-- Header -->
+  <div class="flex items-center mb-6">
+    <mat-icon class="text-indigo-600 mr-2">{{ schedule ? 'edit' : 'add' }}</mat-icon>
+    <h2 class="text-2xl font-bold text-gray-800">
+      {{ schedule ? 'Editar' : 'Agregar' }} Horario
     </h2>
+  </div>
 
-    <form [formGroup]="scheduleForm" class="space-y-4">
-        <!-- Docente -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Docente</label>
-            <select class="w-full border rounded px-3 py-2 text-sm" [disabled]="!!schedule" formControlName="teacherId">
-                <option [ngValue]="''" disabled>Seleccione un docente</option>
-                <option *ngFor="let teacher of teachers" [value]="teacher.id">
-                    {{ teacher.name }} - {{ teacher.employeeId }}
-                </option>
-            </select>
-            <p *ngIf="scheduleForm.get('teacherId')?.hasError('required')" class="text-red-600 text-sm mt-1">
-                El docente es requerido
-            </p>
-        </div>
-
-        <!-- Día de la semana -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Día de la Semana</label>
-            <select class="w-full border rounded px-3 py-2 text-sm" formControlName="dayOfWeek">
-                <option [ngValue]="''" disabled>Seleccione un día</option>
-                <option [value]="1">Lunes</option>
-                <option [value]="2">Martes</option>
-                <option [value]="3">Miércoles</option>
-                <option [value]="4">Jueves</option>
-                <option [value]="5">Viernes</option>
-                <option [value]="6">Sábado</option>
-                <option [value]="0">Domingo</option>
-            </select>
-            <p *ngIf="scheduleForm.get('dayOfWeek')?.hasError('required')" class="text-red-600 text-sm mt-1">
-                El día es requerido
-            </p>
-        </div>
-
-        <!-- Horas -->
-        <div class="flex gap-4">
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Hora de Inicio</label>
-                <input type="time" class="w-full border rounded px-3 py-2 text-sm" formControlName="startTime" />
-                <p *ngIf="scheduleForm.get('startTime')?.hasError('required')" class="text-red-600 text-sm mt-1">
-                    La hora de inicio es requerida
-                </p>
-            </div>
-
-            <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Hora de Fin</label>
-                <input type="time" class="w-full border rounded px-3 py-2 text-sm" formControlName="endTime" />
-                <p *ngIf="scheduleForm.get('endTime')?.hasError('required')" class="text-red-600 text-sm mt-1">
-                    La hora de fin es requerida
-                </p>
-            </div>
-        </div>
-
-        <!-- Materia -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Materia</label>
-            <input type="text" class="w-full border rounded px-3 py-2 text-sm" placeholder="Nombre de la materia"
-                formControlName="subject" />
-            <p *ngIf="scheduleForm.get('subject')?.hasError('required')" class="text-red-600 text-sm mt-1">
-                La materia es requerida
-            </p>
-        </div>
-
-        <!-- Aula -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Aula</label>
-            <input type="text" class="w-full border rounded px-3 py-2 text-sm" placeholder="Número o nombre del aula"
-                formControlName="classroom" />
-            <p *ngIf="scheduleForm.get('classroom')?.hasError('required')" class="text-red-600 text-sm mt-1">
-                El aula es requerida
-            </p>
-        </div>
-    </form>
-
-    <!-- Botones -->
-    <div class="flex justify-end gap-4 mt-6">
-        <button type="button" class="px-4 py-2 text-gray-700 border rounded hover:bg-gray-100" (click)="close()">
-            Cancelar
-        </button>
-        <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" (click)="onSave()"
-            [disabled]="scheduleForm.invalid">
-            {{ schedule ? 'Actualizar' : 'Guardar' }}
-        </button>
+  <form [formGroup]="scheduleForm" class="space-y-5">
+    <!-- Docente -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+        <mat-icon class="text-gray-500 mr-2 !text-base">person</mat-icon>
+        Docente
+      </label>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-select formControlName="teacherId" [disabled]="!!schedule">
+          <mat-option [value]="''" disabled>Seleccione un docente</mat-option>
+          <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+            {{ teacher.name }} - {{ teacher.employeeId }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="scheduleForm.get('teacherId')?.hasError('required')" class="flex items-center">
+          <mat-icon class="mr-1 !text-sm">error</mat-icon>
+          El docente es requerido
+        </mat-error>
+      </mat-form-field>
     </div>
+
+    <!-- Día de la semana -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+        <mat-icon class="text-gray-500 mr-2 !text-base">calendar_today</mat-icon>
+        Día de la Semana
+      </label>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-select formControlName="dayOfWeek">
+          <mat-option [value]="''" disabled>Seleccione un día</mat-option>
+          <mat-option [value]="1">Lunes</mat-option>
+          <mat-option [value]="2">Martes</mat-option>
+          <mat-option [value]="3">Miércoles</mat-option>
+          <mat-option [value]="4">Jueves</mat-option>
+          <mat-option [value]="5">Viernes</mat-option>
+          <mat-option [value]="6">Sábado</mat-option>
+          <mat-option [value]="0">Domingo</mat-option>
+        </mat-select>
+        <mat-error *ngIf="scheduleForm.get('dayOfWeek')?.hasError('required')" class="flex items-center">
+          <mat-icon class="mr-1 !text-sm">error</mat-icon>
+          El día es requerido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Horas -->
+    <div class="flex gap-4">
+      <div class="w-1/2">
+        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+          <mat-icon class="text-gray-500 mr-2 !text-base">schedule</mat-icon>
+          Hora de Inicio
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput type="time" formControlName="startTime" />
+          <mat-error *ngIf="scheduleForm.get('startTime')?.hasError('required')" class="flex items-center">
+            <mat-icon class="mr-1 !text-sm">error</mat-icon>
+            La hora de inicio es requerida
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="w-1/2">
+        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+          <mat-icon class="text-gray-500 mr-2 !text-base">schedule</mat-icon>
+          Hora de Fin
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput type="time" formControlName="endTime" />
+          <mat-error *ngIf="scheduleForm.get('endTime')?.hasError('required')" class="flex items-center">
+            <mat-icon class="mr-1 !text-sm">error</mat-icon>
+            La hora de fin es requerida
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Materia -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+        <mat-icon class="text-gray-500 mr-2 !text-base">class</mat-icon>
+        Materia
+      </label>
+      <input type="text" placeholder="Nombre de la materia" formControlName="subject"
+        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
+      <div *ngIf="scheduleForm.get('subject')?.hasError('required') && scheduleForm.get('subject')?.touched"
+        class="text-sm text-red-600 mt-2 flex items-center">
+        <mat-icon class="!text-sm mr-1">error</mat-icon>
+        La materia es requerida
+      </div>
+    </div>
+
+    <!-- Aula -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+        <mat-icon class="text-gray-500 mr-2 !text-base">room</mat-icon>
+        Aula
+      </label>
+      <input type="text" placeholder="Número o nombre del aula" formControlName="classroom"
+        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
+      <div *ngIf="scheduleForm.get('classroom')?.hasError('required') && scheduleForm.get('classroom')?.touched"
+        class="text-sm text-red-600 mt-2 flex items-center">
+        <mat-icon class="!text-sm mr-1">error</mat-icon>
+        El aula es requerida
+      </div>
+    </div>
+  </form>
+
+  <!-- Action Buttons -->
+  <div class="mt-8 flex justify-end space-x-3">
+    <button type="button" (click)="close()"
+      class="flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+      <mat-icon class="mr-1 !text-base">close</mat-icon>
+      Cancelar
+    </button>
+    <button type="button" (click)="onSave()" [disabled]="scheduleForm.invalid"
+      class="flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors disabled:opacity-50">
+      <mat-icon class="mr-1 !text-base">{{ schedule ? 'save' : 'add' }}</mat-icon>
+      {{ schedule ? 'Actualizar' : 'Guardar' }}
+    </button>
+  </div>
 </div>

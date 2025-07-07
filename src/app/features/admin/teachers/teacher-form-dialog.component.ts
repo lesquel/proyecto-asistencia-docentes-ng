@@ -9,19 +9,24 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Teacher } from '../../../core/models/user.model';
 import { TeacherService } from '../../../core/services/teacher.service';
 import { CommonModule } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import {  MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-teacher-form-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatIcon,
+    MatDialogModule,
+    MatFormFieldModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './teacher-form-dialog.component.html',
 })
@@ -54,7 +59,10 @@ export class TeacherFormDialogComponent {
 
   onSave(): void {
     if (this.teacherForm.valid) {
-      const formValue = this.teacherForm.value as Omit<Teacher, 'id' | 'createdAt'>;
+      const formValue = this.teacherForm.value as Omit<
+        Teacher,
+        'id' | 'createdAt'
+      >;
 
       if (this.teacher) {
         this.teacherService.updateTeacher(this.teacher.id, formValue);
@@ -71,6 +79,6 @@ export class TeacherFormDialogComponent {
   }
 
   close(): void {
-    this.dialogRef.close();   
+    this.dialogRef.close();
   }
 }
