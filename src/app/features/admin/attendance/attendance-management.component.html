@@ -1,33 +1,31 @@
 <app-layout [title]="'Gestión de Asistencias'" [menuItems]="menuItems">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        <!-- Tabs -->
+        <!-- Tabs principales -->
         <mat-tab-group mat-stretch-tabs>
 
-            <!-- TAB: Asistencias -->
+            <!-- Tab: Registro de Asistencias -->
             <mat-tab label="Registro de Asistencias">
-                <mat-card class="mt-4 shadow-sm border border-gray-200">
+                <mat-card class="shadow border border-gray-200 rounded-xl">
                     <mat-card-header>
                         <mat-card-title class="text-xl font-semibold">Asistencias Registradas</mat-card-title>
                         <mat-card-subtitle class="text-gray-600">Monitoreo de asistencias de todos los
                             docentes</mat-card-subtitle>
                     </mat-card-header>
 
-                    <mat-card-content>
+                    <mat-card-content class="pt-4 space-y-6">
 
                         <!-- Filtros -->
-                        <div class="grid gap-4 md:grid-cols-3 mt-4 mb-6">
-                            <!-- Fecha -->
-                            <mat-form-field appearance="outline">
+                        <div class="grid gap-4 md:grid-cols-3">
+                            <mat-form-field appearance="outline" floatLabel="always">
                                 <mat-label>Filtrar por fecha</mat-label>
-                                <input matInput [matDatepicker]="picker1" (dateChange)="onAttendanceDateChange($event)"
-                                    placeholder="Seleccionar fecha" />
+                                <input matInput [matDatepicker]="picker1"
+                                    (dateChange)="onAttendanceDateChange($event)" />
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
 
-                            <!-- Docente -->
-                            <mat-form-field appearance="outline">
+                            <mat-form-field appearance="outline" floatLabel="always">
                                 <mat-label>Filtrar por docente</mat-label>
                                 <mat-select (selectionChange)="onTeacherFilterChange($event.value)">
                                     <mat-option value="">Todos los docentes</mat-option>
@@ -37,16 +35,15 @@
                                 </mat-select>
                             </mat-form-field>
 
-                            <!-- Botón Limpiar -->
                             <div class="flex items-end">
                                 <button mat-stroked-button color="warn" (click)="clearAttendanceFilters()"
                                     class="w-full">
-                                    <mat-icon>clear</mat-icon> Limpiar Filtros
+                                    <mat-icon class="mr-2">clear</mat-icon> Limpiar Filtros
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Tabla de asistencias -->
+                        <!-- Tabla -->
                         <div class="overflow-x-auto">
                             <table mat-table [dataSource]="filteredAttendances()" class="min-w-full">
 
@@ -79,8 +76,8 @@
                                 <ng-container matColumnDef="time">
                                     <th mat-header-cell *matHeaderCellDef>Horario</th>
                                     <td mat-cell *matCellDef="let attendance">
-                                        {{ getScheduleInfo(attendance.scheduleId)?.startTime }} -
-                                        {{ getScheduleInfo(attendance.scheduleId)?.endTime }}
+                                        {{ getScheduleInfo(attendance.scheduleId)?.startTime }} - {{
+                                        getScheduleInfo(attendance.scheduleId)?.endTime }}
                                     </td>
                                 </ng-container>
 
@@ -124,9 +121,9 @@
                 </mat-card>
             </mat-tab>
 
-            <!-- TAB: Justificaciones -->
+            <!-- Tab: Justificaciones -->
             <mat-tab label="Justificaciones">
-                <mat-card class="mt-4 shadow-sm border border-gray-200">
+                <mat-card class="shadow border border-gray-200 rounded-xl">
                     <mat-card-header>
                         <mat-card-title class="text-xl font-semibold">Justificaciones Pendientes</mat-card-title>
                         <mat-card-subtitle class="text-gray-600">Revisar y aprobar justificaciones de
@@ -141,11 +138,9 @@
                                 <ng-container matColumnDef="teacher">
                                     <th mat-header-cell *matHeaderCellDef>Docente</th>
                                     <td mat-cell *matCellDef="let justification">
-                                        <div>
-                                            <p class="font-medium">{{ getTeacherName(justification.teacherId) }}</p>
-                                            <p class="text-xs text-gray-600">{{
-                                                getTeacherEmployeeId(justification.teacherId) }}</p>
-                                        </div>
+                                        <p class="font-medium">{{ getTeacherName(justification.teacherId) }}</p>
+                                        <p class="text-xs text-gray-600">{{
+                                            getTeacherEmployeeId(justification.teacherId) }}</p>
                                     </td>
                                 </ng-container>
 
@@ -159,7 +154,7 @@
                                 <ng-container matColumnDef="reason">
                                     <th mat-header-cell *matHeaderCellDef>Motivo</th>
                                     <td mat-cell *matCellDef="let justification">
-                                        <span class="line-clamp-1">{{ justification.reason }}</span>
+                                        <p class="truncate max-w-xs">{{ justification.reason }}</p>
                                     </td>
                                 </ng-container>
 

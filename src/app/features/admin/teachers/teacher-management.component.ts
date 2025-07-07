@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -29,6 +29,8 @@ import { TeacherFormDialogComponent } from './teacher-form-dialog.component';
 })
 export class TeacherManagementComponent {
   teacher = signal<Teacher | null>(null);
+  public teacherService: TeacherService = inject(TeacherService);
+  private dialog: MatDialog = inject(MatDialog);
 
   menuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
@@ -45,11 +47,6 @@ export class TeacherManagementComponent {
     'schedules',
     'actions',
   ];
-
-  constructor(
-    public teacherService: TeacherService,
-    private dialog: MatDialog
-  ) {}
 
   openTeacherDialog(teacher?: Teacher): void {
     this.dialog.open(TeacherFormDialogComponent, {
