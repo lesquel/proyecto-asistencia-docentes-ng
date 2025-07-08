@@ -27,7 +27,6 @@
     "@mui/material": "^7.1.2",
     "@tailwindcss/postcss": "^4.1.10",
     "express": "^5.1.0",
-    "lucide-angular": "^0.518.0",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.10",
